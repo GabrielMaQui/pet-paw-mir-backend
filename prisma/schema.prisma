@@ -25,7 +25,7 @@ model User {
   created_at         DateTime          @default(now())
   updated_at         DateTime          @updatedAt
 
-  @@map("Users") // Mapeo a la tabla "Users"
+  @@map("User")
 }
 
 enum UserRole {
