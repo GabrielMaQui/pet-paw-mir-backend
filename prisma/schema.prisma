@@ -8,37 +8,31 @@ datasource db {
 }
 
 model User {
-  id                 Int               @id @default(autoincrement()) // Primary key
-  nombre             String
-  apellido           String
-  pais               String
-  foto_perfil        String // URL de la foto de perfil
-  direccion          String
-  numero_contacto    String
-  fecha_nacimiento   DateTime
-  correo_electronico String            @unique
-  contrasena         String
-  role               UserRole          @default(Usuario)
-  idioma_preferido   PreferredLanguage @default(es)
-  modo_nocturno      Boolean           @default(false)
-  estado             UserStatus        @default(Habilitado)
-  created_at         DateTime          @default(now())
-  updated_at         DateTime          @updatedAt
-
-  @@map("User")
+  id                String            @id @default(cuid()) // Primary key
+  name              String
+  lastName          String
+  country           String?
+  avatar            String? // URL de la foto de perfil
+  address           String?
+  phoneNumber       String?
+  birthDate         DateTime
+  account           String            @unique
+  email             String?           @unique
+  password          String
+  role              UserRole          @default(USER)
+  preferredLanguage PreferredLanguage @default(ES)
+  darkMode          Boolean           @default(false)
+  isActive          Boolean           @default(false)
+  created_at        DateTime          @default(now())
+  updated_at        DateTime          @updatedAt
 }
 
 enum UserRole {
-  Usuario
-  Administrador
+  USER
+  ADMINISTRATOR
 }
 
 enum PreferredLanguage {
-  es
-  en
-}
-
-enum UserStatus {
-  Habilitado
-  Deshabilitado
+  ES
+  EN
 }
