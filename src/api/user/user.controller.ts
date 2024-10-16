@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from "express";
-import { UserService } from './user.servive';
+import { NextFunction, type Request, type Response } from 'express';
+import { UserService } from './user.service';
 
 const userService = new UserService();
 
 // Obtener todos los usuarios
 export function getAllUsersHandler(req: Request, res: Response): void {
-  const users = userService.getUsers();
+  const users = userService.getAllUsers();
   res.json(users);
 }
 
@@ -16,8 +16,8 @@ export function createUserHandler(req: Request, res: Response): void {
   // Validar datos antes de crear el usuario
   const validation = userService.validateUserData(userData);
   if (!validation.valid) {
-      res.status(400).json({ error: validation.message });
-      return;
+    res.status(400).json({ error: validation.message });
+    return;
   }
 
   try {
@@ -28,15 +28,13 @@ export function createUserHandler(req: Request, res: Response): void {
   }
 }
 
-
 // Obtener un usuario por ID
 export function getOneUserHandler(req: Request, res: Response): void {
   const id = Number(req.params.id);
   const user = userService.getUserById(id);
   if (!user) {
-      res.status(404).json({ error: 'Usuario no encontrado' });
-      return;
+    res.status(404).json({ error: 'Usuario no encontrado' });
+    return;
   }
   res.json(user);
 }
-
