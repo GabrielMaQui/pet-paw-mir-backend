@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-  id                String            @id @default(cuid()) // Primary key
+  id                String            @id @default(cuid())
   name              String
   lastName          String
   country           String?
-  avatar            String? // URL de la foto de perfil
+  avatar            String?
   address           String?
   phoneNumber       String?
   birthDate         DateTime
