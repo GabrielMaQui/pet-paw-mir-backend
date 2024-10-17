@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import type { User } from './user.type';
+import { hashPassword } from '../../auth/utils/crypto';
 
 const prisma = new PrismaClient();
 
@@ -12,8 +13,17 @@ export async function createUser(input: User): Promise<User>  {
   if (!input.password) {
     throw new Error('Password is required');
   }
+
+  const hashedPassword = await hashPassword(input.password);
+
+  const data: User = {
+    ...input,
+    password: hashedPassword,
+
+  };
+
   const newUser = await prisma.user.create({
-    data: input,
+    data,
   });
 
   return newUser;

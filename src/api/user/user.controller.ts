@@ -27,12 +27,13 @@ export async function createUserHandler(req: Request, res: Response) {
 export async function getOneUserHandler(req: Request, res: Response) {
   const { id } = req.params;
   const user = await getUserById(id);
+
   if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
-  }
-  else {
+  } else {
     res.json(user);
   }
+
 }
 
 export async function updateUserHandler(req: Request, res: Response) {

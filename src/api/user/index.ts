@@ -12,7 +12,7 @@ import {
 const router = Router();
 
 //Lista de rutas para un modelo (tabla)
-router.get('/', getAllUsersHandler);
+router.get('/', hasRole(['USER']), getAllUsersHandler);
 router.post('/', createUserHandler);
 //router.get('/:id', getOneUserHandler);
 router.patch('/:id', hasRole(['ADMINISTRADOR']), updateUserHandler);
