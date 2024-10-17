@@ -44,3 +44,40 @@ export async function getOnePostHandler(
     res.status(500).json({ message: 'An error occurred' });
   }
 }
+
+export async function updatePostHandler(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { id } = req.params;
+  const data = req.body as Post;
+  try {
+    const updatedPost = await postService.updatePostById(id, data);
+    if (!updatedPost) {
+      res.status(404).json({ message: 'Post not found' });
+      return;
+    }
+    res.json(updatedPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+}
+
+export async function deletePostHandler(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { id } = req.params;
+  try {
+    const post = await postService.deletePostById(id);
+    if (post) {
+      res.status(201).json(post);
+    } else {
+      res.status(404).json({ message: 'Post not found' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+}

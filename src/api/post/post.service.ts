@@ -23,4 +23,19 @@ export class PostService {
     const post = await this.prisma.post.findUnique({ where: { id } });
     return post;
   }
+
+  public async updatePostById(id: string, post: Post): Promise<Post | null> {
+    const updatedPost = await this.prisma.post.update({
+      where: { id },
+      data: post,
+    });
+    return updatedPost;
+  }
+
+  public async deletePostById(id: string): Promise<Post | null> {
+    const deletedPost = await this.prisma.post.delete({
+      where: { id },
+    });
+    return deletedPost;
+  }
 }
