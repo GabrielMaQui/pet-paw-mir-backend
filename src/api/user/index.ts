@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { hasRole, isAuthenticated } from '../../auth/auth.controller'
 import {
   createUserHandler,
   deleteUserHandler,
@@ -14,8 +15,8 @@ const router = Router();
 router.get('/', getAllUsersHandler);
 router.post('/', createUserHandler);
 //router.get('/:id', getOneUserHandler);
-router.put('/:id', updateUserHandler);
-router.delete('/:id', deleteUserHandler);
+router.patch('/:id', hasRole(['ADMINISTRADOR']), updateUserHandler);
+router.delete('/:id',hasRole(['ADMINISTRADOR']), deleteUserHandler);
 
 //exportar la aplicacion
 export default router;
