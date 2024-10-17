@@ -1,33 +1,42 @@
+import { PrismaClient } from '@prisma/client';
 import type { User } from './user.type';
 
 //TODO : Falta implementación de Prisma
 export class UserService {
   //Servicio basado en lista
   private users: User[] = [];
+  private prisma: PrismaClient;
+
+  constructor() {
+    this.prisma = new PrismaClient();
+  }
 
   // Agregar un usuario
-  public createUser(
-    userData: Omit<User, 'id' | 'created_at' | 'updated_at'>,
-  ): User {
-    const newUser: User = {
-      ...userData,
-      id: Date.now(), // Generar ID simple
-      created_at: new Date(),
-      updated_at: new Date(),
-    };
-    this.users.push(newUser);
+  public async createUser(user: User): Promise<User> {
+    const newUser = await this.prisma.user.create({
+      data: user,
+    });
+
     return newUser;
   }
 
-  public getAllUsers(): User[] {
-    return this.users;
+  public async getAllUsers(): Promise<User[]> {
+    const users = await this.prisma.user.findMany();
+    return users;
   }
 
   // Encontrar un usuario por ID
-  public getUserById(id: number): User | undefined {
-    return this.users.find((user) => user.id === id);
+  public async getUserById(id: string): Promise<User | null> {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: id,
+      },
+    });
+
+    return user;
   }
 
+  /*
   public validateUserData(userData: Partial<User>): {
     valid: boolean;
     message?: string;
@@ -40,4 +49,5 @@ export class UserService {
 
     return { valid: true };
   }
+  */
 }
