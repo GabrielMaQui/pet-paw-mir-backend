@@ -42,9 +42,14 @@ model Post {
   picture         String
   pet_state       PetState
   tags            String[]
+  latitude        Decimal   @db.Decimal(9, 6)
+  longitude       Decimal   @db.Decimal(9, 6)
 
   user    User   @relation(fields: [user_id], references: [id])
   user_id String
+
+  @@unique([name, id])
+  @@unique([date_lost, user_id])
 }
 
 enum UserRole {
