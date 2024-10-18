@@ -5,15 +5,18 @@ import {
   deletePostHandler,
   getAllPostsHandler,
   getOnePostHandler,
+  getPostsByUserHandler,
   updatePostHandler,
 } from './post.controller';
 
 const router = Router();
 
-router.get('/', hasRole(['USER']), getAllPostsHandler);
+router.get('/', getAllPostsHandler);
 router.get('/:id', getOnePostHandler);
 router.delete('/:id', deletePostHandler);
 router.post('/', hasRole(['USER']), createPostHandler);
 router.patch('/:id', updatePostHandler);
+
+router.get('/user/:userId', getPostsByUserHandler);
 
 export default router;

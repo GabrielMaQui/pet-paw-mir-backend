@@ -91,3 +91,17 @@ export async function deletePostHandler(
     res.status(500).json({ message: 'An error occurred' });
   }
 }
+
+export async function getPostsByUserHandler(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { userId } = req.params;
+  try {
+    const posts = await postService.getPostsByUser(userId);
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+}

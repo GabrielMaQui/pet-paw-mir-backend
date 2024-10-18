@@ -38,4 +38,13 @@ export class PostService {
     });
     return deletedPost;
   }
+
+  public async getPostsByUser(userId: string): Promise<Post[]> {
+    const posts = await this.prisma.post.findMany({
+      where: {
+        user_id: userId,
+      },
+    });
+    return posts;
+  }
 }
