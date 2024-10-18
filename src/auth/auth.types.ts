@@ -6,7 +6,6 @@ export type PayloadType = {
   id: string;
   email: string;
   name?: number;
-  code?: number;
 };
 
 export interface AuthRequest extends Request {
