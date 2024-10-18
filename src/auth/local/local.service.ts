@@ -13,6 +13,7 @@ export function createAuthResponse(input: User) {
     fullName: `${input.name} ${input.lastName}`,
     avatar: input.avatar,
     role: input.role,
+    email: input.email,
   };
 
   return {
