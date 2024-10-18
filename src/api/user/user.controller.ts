@@ -1,4 +1,5 @@
 import type { Request, Response } from 'express';
+import { sendVerificationEmail } from '../../utils/email.controller'
 import {
   createUser,
   deleteUser,
@@ -18,6 +19,7 @@ export async function createUserHandler(req: Request, res: Response) {
   const userData = req.body;
   try {
     const newUser = await createUser(userData);
+    await sendVerificationEmail(newUser.email, newUser.name, "123456");
     res.status(201).json(newUser);
   } catch (error) {
     res.status(500).json({ error: 'Error al crear el usuario' });

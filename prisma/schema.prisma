@@ -23,6 +23,8 @@ model User {
   preferredLanguage PreferredLanguage @default(ES)
   darkMode          Boolean           @default(false)
   isActive          Boolean           @default(false)
+  verificationToken String?           
+  tokenExpiresAt    DateTime?
   created_at        DateTime          @default(now())
   updated_at        DateTime          @updatedAt
 }
