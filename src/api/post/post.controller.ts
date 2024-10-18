@@ -1,5 +1,7 @@
 import exp from 'node:constants';
 import { NextFunction, type Request, type Response } from 'express';
+import { verifyToken } from '../../auth/auth.service';
+import type { PayloadType } from '../../auth/auth.types';
 import { PostService } from './post.service';
 import type { Post } from './post.type';
 
@@ -18,6 +20,14 @@ export async function createPostHandler(
   res: Response,
 ): Promise<void> {
   const data = req.body as Post;
+  const token = req.headers?.authorization?.split(' ')[1];
+
+  if (token) {
+    const decoded = verifyToken(token) as PayloadType;
+    console.log(decoded.id);
+    data.user_id = decoded.id;
+  }
+
   try {
     const newPost = await postService.createPost(data);
     res.status(201).json(newPost);

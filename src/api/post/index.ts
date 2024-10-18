@@ -10,10 +10,10 @@ import {
 
 const router = Router();
 
-router.get('/', hasRole(["USER"]), getAllPostsHandler);
+router.get('/', hasRole(['USER']), getAllPostsHandler);
 router.get('/:id', getOnePostHandler);
 router.delete('/:id', deletePostHandler);
-router.post('/', createPostHandler);
+router.post('/', hasRole(['USER']), createPostHandler);
 router.patch('/:id', updatePostHandler);
 
 export default router;
