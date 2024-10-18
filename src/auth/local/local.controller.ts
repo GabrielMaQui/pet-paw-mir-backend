@@ -1,6 +1,6 @@
 import type { Request, Response } from 'express';
-
-import { getUserByEmail } from '../../api/user/user.service';
+import { isAfter } from 'date-fns';
+import { getUserByEmail, getUserByToken, updateUser } from '../../api/user/user.service';
 import { comparePassword } from '../utils/crypto';
 import { createAuthResponse } from './local.service';
 
@@ -32,5 +32,35 @@ export async function loginHandler(req: Request, res: Response) {
     res.status(500).json({
       message: 'Internal Server Error',
     });
+  }
+}
+
+export async function activateAccountHandler(req: Request, res: Response) {
+  const { token } = req.params;
+
+  const user = await getUserByToken(token);
+
+  if (!user) {
+    res.status(400).json({ message: 'Invalid token' });
+  } else {
+    const currentDate = new Date();
+    const tokenExpired = user.tokenExpiresAt as Date;
+
+    if (isAfter(currentDate, tokenExpired)) {
+      res.status(400).json({ message: 'Token has expired' });
+    } else {
+      const data = {
+        ...user,
+        verificationToken: null,
+        tokenExpiresAt: null,
+        isActive: true,
+      }
+
+      await updateUser(user.id, data);
+
+      const response = createAuthResponse(user);
+
+      res.json(response);
+    }
   }
 }

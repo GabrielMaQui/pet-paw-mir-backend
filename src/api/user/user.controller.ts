@@ -1,4 +1,7 @@
 import type { Request, Response } from 'express';
+import { sendVerificationEmail } from '../../utils/email.controller';
+import { add } from 'date-fns';
+
 import {
   createUser,
   deleteUser,
@@ -15,6 +18,7 @@ export async function getAllUsersHandler(req: Request, res: Response) {
 
 // Crear un nuevo usuario
 export async function createUserHandler(req: Request, res: Response) {
+<<<<<<< HEAD
   const userData = req.body;
   try {
     const newUser = await createUser(userData);
@@ -23,6 +27,35 @@ export async function createUserHandler(req: Request, res: Response) {
     console.log(error);
     res.status(500).json({ error: 'Error al crear el usuario' });
   }
+=======
+    const userData = req.body;
+
+    try {
+      // Generar el token aleatorio y la fecha de expiración
+      const verificationToken = generateRandomToken();
+      const currentDate = new Date();
+      const tokenExpiresAt = add(currentDate, { days: 1 }); // Establece la expiración para 1 día después
+
+      // Actualizar los datos del usuario con el token y la fecha de expiración
+      const userWithTokenData = {
+        ...userData,
+        verificationToken,
+        tokenExpiresAt,
+      };
+
+      // Crear el usuario con los datos actualizados
+      const newUser = await createUser(userWithTokenData);
+
+      // Enviar el correo con el token de verificación
+      await sendVerificationEmail(newUser.email, newUser.name, verificationToken);
+
+      // Responder con el nuevo usuario creado
+      res.status(201).json(newUser);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error al crear el usuario' });
+    }
+>>>>>>> 36c8eb6857dab6ccd1c43ade2b9ec87508bebe4d
 }
 
 export async function getOneUserHandler(req: Request, res: Response) {
@@ -57,4 +90,9 @@ export async function deleteUserHandler(req: Request, res: Response) {
   } catch (error) {
     res.status(500).json({ error: 'Error al eliminar el usuario' });
   }
+}
+
+
+function generateRandomToken(): string {
+  return Math.floor(1000000 + Math.random() * 9000000).toString(); // Genera un número de 7 dígitos
 }

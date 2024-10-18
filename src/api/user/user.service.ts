@@ -68,3 +68,13 @@ export async function deleteUser(id: string): Promise<User> {
 
   return deletedUser;
 }
+
+export async function getUserByToken(token: string) {
+  const user = await prisma.user.findFirst({
+    where: {
+      verificationToken: token,
+    },
+  });
+
+  return user;
+}
