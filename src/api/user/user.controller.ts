@@ -1,6 +1,6 @@
+import { add } from 'date-fns';
 import type { Request, Response } from 'express';
 import { sendVerificationEmail } from '../../utils/email.controller';
-import { add } from 'date-fns';
 
 import {
   createUser,
@@ -18,16 +18,6 @@ export async function getAllUsersHandler(req: Request, res: Response) {
 
 // Crear un nuevo usuario
 export async function createUserHandler(req: Request, res: Response) {
-<<<<<<< HEAD
-  const userData = req.body;
-  try {
-    const newUser = await createUser(userData);
-    res.status(201).json(newUser);
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: 'Error al crear el usuario' });
-  }
-=======
     const userData = req.body;
 
     try {
@@ -55,7 +45,6 @@ export async function createUserHandler(req: Request, res: Response) {
       console.error(error);
       res.status(500).json({ error: 'Error al crear el usuario' });
     }
->>>>>>> 36c8eb6857dab6ccd1c43ade2b9ec87508bebe4d
 }
 
 export async function getOneUserHandler(req: Request, res: Response) {
