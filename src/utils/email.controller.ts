@@ -1,4 +1,5 @@
 import { MailerSend, EmailParams, Sender, Recipient } from "mailersend";
+
 import { getHTMLTemplate } from "../templates/credential.js";
 
 export async function sendVerificationEmail(email: string, name: string, token: string) {
