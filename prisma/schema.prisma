@@ -8,23 +8,50 @@ datasource db {
 }
 
 model User {
-  id                String            @id @default(cuid()) // Primary key
+  id                String            @id @default(cuid())
   name              String
   lastName          String
   country           String?
-  avatar            String? // URL de la foto de perfil
+  avatar            String?
   address           String?
   phoneNumber       String?
   birthDate         DateTime
   account           String            @unique
-  email             String?           @unique
+  email             String            @unique
   password          String
   role              UserRole          @default(USER)
   preferredLanguage PreferredLanguage @default(ES)
   darkMode          Boolean           @default(false)
   isActive          Boolean           @default(false)
+  verificationToken String?           
+  tokenExpiresAt    DateTime?
   created_at        DateTime          @default(now())
   updated_at        DateTime          @updatedAt
+
+  posts Post[]
+}
+
+model Post {
+  id              String    @id @default(cuid()) // Primary key
+  name            String
+  pet_type        PetType
+  pet_gender      PetGender
+  pet_description String
+  pet_size        PetSize
+  pet_age         PetAge
+  date_lost       DateTime
+  reward          String?
+  picture         String
+  pet_state       PetState
+  tags            String[]
+  latitude        Decimal   @db.Decimal(9, 6)
+  longitude       Decimal   @db.Decimal(9, 6)
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
+
+  @@unique([name, id])
+  @@unique([date_lost, user_id])
 }
 
 enum UserRole {
@@ -35,4 +62,37 @@ enum UserRole {
 enum PreferredLanguage {
   ES
   EN
+}
+
+enum PetType {
+  DOG
+  CAT
+  BIRD
+  RABBIT
+  OTHER
+}
+
+enum PetGender {
+  MALE
+  FEMALE
+}
+
+enum PetSize {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum PetAge {
+  PUPPY
+  YOUNG
+  ADULT
+  SENIOR
+}
+
+enum PetState {
+  LOST
+  FOUND
+  ADOPTION
+  ADOPTED
 }

@@ -1,43 +1,80 @@
+import { PrismaClient } from '@prisma/client';
+import { hashPassword } from '../../auth/utils/crypto';
 import type { User } from './user.type';
 
-//TODO : Falta implementación de Prisma
-export class UserService {
-  //Servicio basado en lista
-  private users: User[] = [];
+const prisma = new PrismaClient();
 
-  // Agregar un usuario
-  public createUser(
-    userData: Omit<User, 'id' | 'created_at' | 'updated_at'>,
-  ): User {
-    const newUser: User = {
-      ...userData,
-      id: Date.now(), // Generar ID simple
-      created_at: new Date(),
-      updated_at: new Date(),
-    };
-    this.users.push(newUser);
-    return newUser;
+export async function getAllUsers(): Promise<User[]> {
+  const users = await prisma.user.findMany();
+  return users;
+}
+
+export async function createUser(input: User): Promise<User> {
+  if (!input.password) {
+    throw new Error('Password is required');
   }
 
-  public getAllUsers(): User[] {
-    return this.users;
-  }
+  const hashedPassword = await hashPassword(input.password);
 
-  // Encontrar un usuario por ID
-  public getUserById(id: number): User | undefined {
-    return this.users.find((user) => user.id === id);
-  }
+  const data: User = {
+    ...input,
+    password: hashedPassword,
+  };
 
-  public validateUserData(userData: Partial<User>): {
-    valid: boolean;
-    message?: string;
-  } {
-    const { nombre, apellido, correo_electronico, contrasena } = userData;
+  const newUser = await prisma.user.create({
+    data,
+  });
 
-    if (!nombre || !apellido || !correo_electronico || !contrasena) {
-      return { valid: false, message: 'Faltan datos obligatorios' };
-    }
+  return newUser;
+}
 
-    return { valid: true };
-  }
+export async function getUserByEmail(email: string): Promise<User | null> {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  return user;
+}
+
+export async function getUserById(id: string): Promise<User | null> {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+  });
+
+  return user;
+}
+
+export async function updateUser(
+  id: string,
+  input: Partial<User>,
+): Promise<User> {
+  const updatedUser = await prisma.user.update({
+    where: { id },
+    data: input,
+  });
+
+  return updatedUser;
+}
+
+// Eliminar un usuario
+export async function deleteUser(id: string): Promise<User> {
+  const deletedUser = await prisma.user.delete({
+    where: { id },
+  });
+
+  return deletedUser;
+}
+
+export async function getUserByToken(token: string) {
+  const user = await prisma.user.findFirst({
+    where: {
+      verificationToken: token,
+    },
+  });
+
+  return user;
 }
