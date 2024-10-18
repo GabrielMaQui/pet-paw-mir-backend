@@ -1,5 +1,5 @@
-import express, { Application } from "express";
 import cors from 'cors';
+import express, {type  Application } from "express";
 import morgan from 'morgan';
 
 

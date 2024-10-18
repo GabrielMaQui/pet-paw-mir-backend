@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { hasRole, isAuthenticated } from '../../auth/auth.controller';
 import {
   createPostHandler,
   deletePostHandler,
@@ -9,7 +10,7 @@ import {
 
 const router = Router();
 
-router.get('/', getAllPostsHandler);
+router.get('/', hasRole(["USER"]), getAllPostsHandler);
 router.get('/:id', getOnePostHandler);
 router.delete('/:id', deletePostHandler);
 router.post('/', createPostHandler);
