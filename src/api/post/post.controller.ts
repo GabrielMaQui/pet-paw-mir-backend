@@ -1,4 +1,3 @@
-import exp from 'node:constants';
 import { NextFunction, type Request, type Response } from 'express';
 import { verifyToken } from '../../auth/auth.service';
 import type { PayloadType } from '../../auth/auth.types';
@@ -47,7 +46,7 @@ export async function getOnePostHandler(
     if (post) {
       res.json(post);
     } else {
-      res.status(404).json({ message: 'Post not found' });
+      res.status(404).json({ message: 'Post not foundsd' });
     }
   } catch (error) {
     console.error(error);
@@ -64,7 +63,7 @@ export async function updatePostHandler(
   try {
     const updatedPost = await postService.updatePostById(id, data);
     if (!updatedPost) {
-      res.status(404).json({ message: 'Post not found' });
+      res.status(404).json({ message: 'Post not founds' });
       return;
     }
     res.json(updatedPost);
@@ -84,7 +83,7 @@ export async function deletePostHandler(
     if (post) {
       res.status(201).json(post);
     } else {
-      res.status(404).json({ message: 'Post not found' });
+      res.status(404).json({ message: 'Post not founds' });
     }
   } catch (error) {
     console.error(error);
@@ -99,6 +98,31 @@ export async function getPostsByUserHandler(
   const { userId } = req.params;
   try {
     const posts = await postService.getPostsByUser(userId);
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
+  }
+}
+
+export async function getUserPostsHandler(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const token = req.headers?.authorization?.split(' ')[1];
+  console.log(token);
+
+  if (!token) {
+    res.status(401).json({ message: 'Unauthorized' });
+    return;
+  }
+
+  const decoded = verifyToken(token) as PayloadType;
+
+  console.log(decoded);
+
+  try {
+    const posts = await postService.getPostsByUser(decoded.id);
     res.json(posts);
   } catch (error) {
     console.error(error);
