@@ -1,6 +1,7 @@
+import { add } from 'date-fns';
 import type { Request, Response } from 'express';
 import { sendVerificationEmail } from '../../utils/email.controller';
-import { add } from 'date-fns';
+
 
 import {
   createUser,
@@ -56,7 +57,6 @@ export async function getOneUserHandler(req: Request, res: Response) {
   } else {
     res.json(user);
   }
-
 }
 
 export async function updateUserHandler(req: Request, res: Response) {

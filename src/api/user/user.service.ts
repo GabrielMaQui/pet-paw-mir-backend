@@ -4,10 +4,11 @@ import { hashPassword } from '../../auth/utils/crypto';
 
 const prisma = new PrismaClient();
 
-export async function getAllUsers() : Promise<User[]>  {
+export async function getAllUsers(): Promise<User[]> {
   const users = await prisma.user.findMany();
   return users;
 }
+
 
 export async function createUser(input: User): Promise<User>  {
   if (!input.password) {
@@ -19,9 +20,7 @@ export async function createUser(input: User): Promise<User>  {
   const data: User = {
     ...input,
     password: hashedPassword,
-
   };
-
   const newUser = await prisma.user.create({
     data,
   });
@@ -39,7 +38,8 @@ export async function getUserByEmail(email: string): Promise<User | null> {
   return user;
 }
 
-export async function getUserById(id: string):Promise<User | null> {
+export async function getUserById(id: string): Promise<User | null> {
+
   const user = await prisma.user.findUnique({
     where: {
       id,
@@ -49,7 +49,13 @@ export async function getUserById(id: string):Promise<User | null> {
   return user;
 }
 
-export async function updateUser(id: string, input: Partial<User>):Promise<User>  {
+
+
+export async function updateUser(
+  id: string,
+  input: Partial<User>,
+): Promise<User> {
+
   const updatedUser = await prisma.user.update({
     where: { id },
     data: input,
