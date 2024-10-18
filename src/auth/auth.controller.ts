@@ -1,19 +1,17 @@
+import type { Response, NextFunction } from 'express';
 import { compose } from 'compose-middleware';
-import type { NextFunction, Response } from 'express';
 
 import { getUserByEmail } from '../api/user/user.service';
-import type { User } from '../api/user/user.type';
 import { verifyToken } from './auth.service';
-import type { AuthRequest, PayloadType } from './auth.types';
+import { AuthRequest, PayloadType } from './auth.types';
+import { User } from '../api/user/user.type';
 
 
 export function isAuthenticated() {
   return compose([
-    async (req: AuthRequest, res: Response, next: any)  => {
+    async (req: AuthRequest, res: Response, next: any) => {
       const token = req.headers?.authorization?.split(' ')[1];
-
-      console.log(req.headers);
-
+    
       if (!token) {
         return res.status(401).json({ message: 'Unauthorized' });
       }

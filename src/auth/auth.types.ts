@@ -5,8 +5,7 @@ import type { User } from '../api/user/user.type';
 export type PayloadType = {
   id: string;
   email: string;
-  name?: number;
-  code?: number;
+  name?: string;
 };
 
 export interface AuthRequest extends Request {

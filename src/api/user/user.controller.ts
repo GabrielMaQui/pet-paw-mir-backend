@@ -2,6 +2,7 @@ import { add } from 'date-fns';
 import type { Request, Response } from 'express';
 import { sendVerificationEmail } from '../../utils/email.controller';
 
+
 import {
   createUser,
   deleteUser,
@@ -52,7 +53,7 @@ export async function getOneUserHandler(req: Request, res: Response) {
   const user = await getUserById(id);
 
   if (!user) {
-    res.status(404).json({ error: 'Usuario no encontrado' });
+      return res.status(404).json({ error: 'Usuario no encontrado' });
   } else {
     res.json(user);
   }
@@ -63,7 +64,7 @@ export async function updateUserHandler(req: Request, res: Response) {
   const userData = req.body;
   const updatedUser = await updateUser(id, userData);
 
-  if (!updateUser) {
+  if(!updateUser) {
     res.status(404).json({ error: 'Usuario no encontrado' });
   } else {
     res.json(updatedUser);
