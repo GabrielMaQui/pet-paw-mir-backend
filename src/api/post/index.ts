@@ -13,7 +13,7 @@ import {
 const router = Router();
 
 router.get('/', getAllPostsHandler);
-router.get('/myposts', hasRole(['USER']), getAllPostsHandler);
+router.get('/myposts', hasRole(['USER']), getUserPostsHandler);
 router.get('/user/:userId', getPostsByUserHandler);
 router.get('/:id', getOnePostHandler);
 router.delete('/:id', deletePostHandler);
