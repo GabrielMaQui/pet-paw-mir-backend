@@ -9,11 +9,9 @@ import type { AuthRequest, PayloadType } from './auth.types';
 
 export function isAuthenticated() {
   return compose([
-    async (req: AuthRequest, res: Response, next: any)  => {
+    async (req: AuthRequest, res: Response, next: any) => {
       const token = req.headers?.authorization?.split(' ')[1];
-
-      console.log(req.headers);
-
+    
       if (!token) {
         return res.status(401).json({ message: 'Unauthorized' });
       }

@@ -46,7 +46,7 @@ export async function getOnePostHandler(
     if (post) {
       res.json(post);
     } else {
-      res.status(404).json({ message: 'Post not foundsd' });
+      res.status(404).json({ message: 'Post not found' });
     }
   } catch (error) {
     console.error(error);
@@ -63,7 +63,7 @@ export async function updatePostHandler(
   try {
     const updatedPost = await postService.updatePostById(id, data);
     if (!updatedPost) {
-      res.status(404).json({ message: 'Post not founds' });
+      res.status(404).json({ message: 'Post not found' });
       return;
     }
     res.json(updatedPost);
@@ -83,7 +83,7 @@ export async function deletePostHandler(
     if (post) {
       res.status(201).json(post);
     } else {
-      res.status(404).json({ message: 'Post not founds' });
+      res.status(404).json({ message: 'Post not found' });
     }
   } catch (error) {
     console.error(error);
