@@ -14,5 +14,5 @@ export const options = {
     ],
   },
 
-  apis: ['./src/api/**/*.ts'],
+  apis: ['./src/api/**/*.ts', './src/auth/**/*.ts'],
 };
