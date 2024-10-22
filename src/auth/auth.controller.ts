@@ -1,10 +1,10 @@
-import type { Response, NextFunction } from 'express';
 import { compose } from 'compose-middleware';
+import type { NextFunction, Response } from 'express';
 
 import { getUserByEmail } from '../api/user/user.service';
+import type { User } from '../api/user/user.type';
 import { verifyToken } from './auth.service';
-import { AuthRequest, PayloadType } from './auth.types';
-import { User } from '../api/user/user.type';
+import type { AuthRequest, PayloadType } from './auth.types';
 
 
 export function isAuthenticated() {

@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import type { User } from './user.type';
 import { hashPassword } from '../../auth/utils/crypto';
+import type { User } from './user.type';
 
 const prisma = new PrismaClient();
 
@@ -39,7 +39,6 @@ export async function getUserByEmail(email: string): Promise<User | null> {
 }
 
 export async function getUserById(id: string): Promise<User | null> {
-
   const user = await prisma.user.findUnique({
     where: {
       id,
@@ -55,7 +54,6 @@ export async function updateUser(
   id: string,
   input: Partial<User>,
 ): Promise<User> {
-
   const updatedUser = await prisma.user.update({
     where: { id },
     data: input,

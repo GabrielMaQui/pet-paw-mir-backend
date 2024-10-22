@@ -23,15 +23,16 @@ model User {
   preferredLanguage PreferredLanguage @default(ES)
   darkMode          Boolean           @default(false)
   isActive          Boolean           @default(false)
+  verificationToken String?           
+  tokenExpiresAt    DateTime?
   created_at        DateTime          @default(now())
   updated_at        DateTime          @updatedAt
-  tokenExpiresAt    DateTime?
-  verificationToken String?
-  posts             Post[]
+
+  posts Post[]
 }
 
 model Post {
-  id              String    @id @default(cuid())
+  id              String    @id @default(cuid()) // Primary key
   name            String
   pet_type        PetType
   pet_gender      PetGender
@@ -45,8 +46,9 @@ model Post {
   tags            String[]
   latitude        Decimal   @db.Decimal(9, 6)
   longitude       Decimal   @db.Decimal(9, 6)
-  user_id         String
-  user            User      @relation(fields: [user_id], references: [id])
+
+  user    User   @relation(fields: [user_id], references: [id])
+  user_id String
 
   @@unique([name, id])
   @@unique([date_lost, user_id])

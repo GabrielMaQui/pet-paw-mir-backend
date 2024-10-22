@@ -2,7 +2,6 @@ import { add } from 'date-fns';
 import type { Request, Response } from 'express';
 import { sendVerificationEmail } from '../../utils/email.controller';
 
-
 import {
   createUser,
   deleteUser,
