@@ -23,12 +23,13 @@ model User {
   preferredLanguage PreferredLanguage @default(ES)
   darkMode          Boolean           @default(false)
   isActive          Boolean           @default(false)
-  verificationToken String?           
+  verificationToken String?
   tokenExpiresAt    DateTime?
   created_at        DateTime          @default(now())
   updated_at        DateTime          @updatedAt
-
-  posts Post[]
+  posts             Post[]
+  messagesSent      Message[]         @relation("MessagesSent")
+  messagesReceived  Message[]         @relation("MessagesReceived")
 }
 
 model Post {
@@ -52,6 +53,16 @@ model Post {
 
   @@unique([name, id])
   @@unique([date_lost, user_id])
+}
+
+model Message {
+  id         String   @id @default(cuid())
+  sender     User     @relation("MessagesSent", fields: [senderId], references: [id])
+  senderId   String
+  receiver   User     @relation("MessagesReceived", fields: [receiverId], references: [id])
+  receiverId String
+  content    String
+  sentAt     DateTime @default(now())
 }
 
 enum UserRole {
