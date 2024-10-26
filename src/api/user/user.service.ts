@@ -9,8 +9,7 @@ export async function getAllUsers(): Promise<User[]> {
   return users;
 }
 
-
-export async function createUser(input: User): Promise<User>  {
+export async function createUser(input: User): Promise<User> {
   if (!input.password) {
     throw new Error('Password is required');
   }
@@ -48,8 +47,6 @@ export async function getUserById(id: string): Promise<User | null> {
   return user;
 }
 
-
-
 export async function updateUser(
   id: string,
   input: Partial<User>,
@@ -64,8 +61,11 @@ export async function updateUser(
 
 // Eliminar un usuario
 export async function deleteUser(id: string): Promise<User> {
-  const deletedUser = await prisma.user.delete({
+  const deletedUser = await prisma.user.update({
     where: { id },
+    data: {
+      isActive: false,
+    },
   });
 
   return deletedUser;

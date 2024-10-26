@@ -1,6 +1,11 @@
 import { Router } from 'express';
 
-import { activateAccountHandler, loginHandler } from './local.controller';
+import {
+  activateAccountHandler,
+  loginHandler,
+  recoverPasswordHandler,
+  resetPasswordHandler,
+} from './local.controller';
 
 const router = Router();
 
@@ -64,6 +69,9 @@ router.post('/login', loginHandler);
  *         description: Error del servidor.
  */
 router.get('/activate/:token', activateAccountHandler);
+router.post('/recover-password', recoverPasswordHandler);
+router.get('/reset-password/:token', resetPasswordHandler);
+
 //router.patch('/forgot-password', (req, res) => {});
 
 export default router;
