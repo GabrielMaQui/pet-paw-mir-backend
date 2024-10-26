@@ -1,6 +1,5 @@
+import type { Pet } from '@prisma/client';
 import { NextFunction, type Request, type Response } from 'express';
-import { verifyToken } from '../../auth/auth.service';
-import type { PayloadType } from '../../auth/auth.types';
 import { PostService } from './post.service';
 import type { Post } from './post.type';
 
@@ -11,25 +10,23 @@ export async function getAllPostsHandler(
   res: Response,
 ): Promise<void> {
   const posts = await postService.getAllPosts();
-  res.json(posts);
+  res.json({ data: posts });
 }
 
-export async function createPostHandler(
+export async function createPostWithPetHandler(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const data = req.body as Post;
-  const token = req.headers?.authorization?.split(' ')[1];
-
-  if (token) {
-    const decoded = verifyToken(token) as PayloadType;
-    console.log(decoded.id);
-    data.user_id = decoded.id;
-  }
+  const { postData } = req.body as {
+    postData: Omit<Post, 'id' | 'created_at' | 'updated_at' | 'pet_id'> & {
+      petData: Omit<Pet, 'id' | 'created_at' | 'updated_at' | 'owner_id'>;
+      userId: string;
+    };
+  };
 
   try {
-    const newPost = await postService.createPost(data);
-    res.status(201).json(newPost);
+    const newPost = await postService.createPostWithPet(postData);
+    res.status(201).json({ data: newPost });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred' });
@@ -42,9 +39,9 @@ export async function getOnePostHandler(
 ): Promise<void> {
   const { id } = req.params;
   try {
-    const post = await postService.getOnePostById(id);
+    const post = await postService.getOnePostById(Number(id));
     if (post) {
-      res.json(post);
+      res.json({ data: post });
     } else {
       res.status(404).json({ message: 'Post not found' });
     }
@@ -59,14 +56,14 @@ export async function updatePostHandler(
   res: Response,
 ): Promise<void> {
   const { id } = req.params;
-  const data = req.body as Post;
+  const { postData } = req.body as { postData: Partial<Post> };
   try {
-    const updatedPost = await postService.updatePostById(id, data);
+    const updatedPost = await postService.updatePostById(Number(id), postData);
     if (!updatedPost) {
       res.status(404).json({ message: 'Post not found' });
       return;
     }
-    res.json(updatedPost);
+    res.json({ data: updatedPost });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred' });
@@ -79,9 +76,9 @@ export async function deletePostHandler(
 ): Promise<void> {
   const { id } = req.params;
   try {
-    const post = await postService.deletePostById(id);
+    const post = await postService.deletePostById(Number(id));
     if (post) {
-      res.status(201).json(post);
+      res.status(200).json({ data: post });
     } else {
       res.status(404).json({ message: 'Post not found' });
     }
@@ -98,32 +95,7 @@ export async function getPostsByUserHandler(
   const { userId } = req.params;
   try {
     const posts = await postService.getPostsByUser(userId);
-    res.json(posts);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'An error occurred' });
-  }
-}
-
-export async function getUserPostsHandler(
-  req: Request,
-  res: Response,
-): Promise<void> {
-  const token = req.headers?.authorization?.split(' ')[1];
-  console.log(token);
-
-  if (!token) {
-    res.status(401).json({ message: 'Unauthorized' });
-    return;
-  }
-
-  const decoded = verifyToken(token) as PayloadType;
-
-  console.log(decoded);
-
-  try {
-    const posts = await postService.getPostsByUser(decoded.id);
-    res.json(posts);
+    res.json({ data: posts });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred' });

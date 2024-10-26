@@ -1,5 +1,6 @@
 import exp from 'node:constants';
 import { PrismaClient } from '@prisma/client';
+import type { Pet } from '../pet/pet.type';
 import type { Post } from './post.type';
 
 export class PostService {
@@ -10,41 +11,81 @@ export class PostService {
   }
 
   public async getAllPosts(): Promise<Post[]> {
-    const posts = await this.prisma.post.findMany();
-    return posts;
+    return await this.prisma.post.findMany({
+      include: {
+        pet: true,
+      },
+    });
   }
 
-  public async createPost(post: Post): Promise<Post> {
-    const newPost = await this.prisma.post.create({ data: post });
+  public async createPostWithPet(
+    postData: Omit<Post, 'id' | 'created_at' | 'updated_at' | 'pet_id'> & {
+      petData: Omit<Pet, 'id' | 'created_at' | 'updated_at' | 'owner_id'>;
+      userId: string;
+    },
+  ): Promise<Post> {
+    const newPost = await this.prisma.$transaction(async (prisma) => {
+      const newPet = await prisma.pet.create({
+        data: {
+          ...postData.petData,
+          owner: { connect: { id: postData.userId } },
+        },
+      });
+
+      const newPost = await prisma.post.create({
+        data: {
+          user: { connect: { id: postData.userId } },
+          pet: { connect: { id: newPet.id } },
+          titulo: postData.titulo,
+          descripcion: postData.descripcion,
+          etiquetas: postData.etiquetas,
+          ubicacion: postData.ubicacion,
+          estado: postData.estado,
+          visibilidad: postData.visibilidad,
+          comentarios_habilitados: postData.comentarios_habilitados,
+        },
+        include: {
+          pet: true, // Incluye los datos de la mascota en el nuevo post creado
+        },
+      });
+
+      return newPost;
+    });
+
     return newPost;
   }
 
-  public async getOnePostById(id: string): Promise<Post | null> {
-    const post = await this.prisma.post.findUnique({ where: { id } });
-    return post;
+  public async getOnePostById(id: number): Promise<Post | null> {
+    return await this.prisma.post.findUnique({
+      where: { id },
+      include: { pet: true },
+    });
   }
 
-  public async updatePostById(id: string, post: Post): Promise<Post | null> {
-    const updatedPost = await this.prisma.post.update({
+  public async updatePostById(
+    id: number,
+    postData: Partial<Post>,
+  ): Promise<Post | null> {
+    return await this.prisma.post.update({
       where: { id },
-      data: post,
+      data: postData,
+      include: { pet: true },
     });
-    return updatedPost;
   }
 
-  public async deletePostById(id: string): Promise<Post | null> {
-    const deletedPost = await this.prisma.post.delete({
+  public async deletePostById(id: number): Promise<Post | null> {
+    return await this.prisma.post.delete({
       where: { id },
+      include: { pet: true },
     });
-    return deletedPost;
   }
 
   public async getPostsByUser(userId: string): Promise<Post[]> {
-    const posts = await this.prisma.post.findMany({
+    return await this.prisma.post.findMany({
       where: {
         user_id: userId,
       },
+      include: { pet: true },
     });
-    return posts;
   }
 }
