@@ -8,51 +8,176 @@ datasource db {
 }
 
 model User {
-  id                String            @id @default(cuid())
+  id                String    @id @default(cuid())
   name              String
   lastName          String
   country           String?
   avatar            String?
+  gender            String    @default("No especificado")
   address           String?
   phoneNumber       String?
   birthDate         DateTime
-  account           String            @unique
-  email             String            @unique
+  account           String    @unique
+  email             String    @unique
   password          String
-  role              UserRole          @default(USER)
-  preferredLanguage PreferredLanguage @default(ES)
-  darkMode          Boolean           @default(false)
-  isActive          Boolean           @default(false)
-  verificationToken String?           
+  role              UserRole  @default(USER)
+  isActive          Boolean   @default(false)
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
   tokenExpiresAt    DateTime?
-  created_at        DateTime          @default(now())
-  updated_at        DateTime          @updatedAt
+  verificationToken String?
+  posts             Post[]
+  pets              Pet[]
+  comments          Comment[]
+  adoptionRequests  AdoptionRequest[]
+  reports           Report[]
+  notifications     Notification[]
+  messagesSent      Message[]         @relation("MessagesSent")
+  messagesReceived  Message[]         @relation("MessagesReceived")
+  followers         UserFollows[]     @relation("followers")
+  following         UserFollows[]     @relation("following")
+  favorites         Favorite[]
+  sightings         Sighting[]
+  settings          Setting?
+}
 
-  posts Post[]
+model Pet {
+  id          BigInt       @id @default(autoincrement())
+  nombre      String
+  tipo_animal PetType
+  raza        String?
+  pelaje      String?
+  color_ojos  String?
+  sexo        PetGender
+  edad        PetAge
+  tamano      PetSize
+  estado      PetState
+  descripcion String?
+  imagen_url  String?
+  validado    Boolean      @default(false)
+  owner       User         @relation(fields: [owner_id], references: [id])
+  owner_id    String
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+  posts       Post[]
+  adoptionRequests  AdoptionRequest[]
+  sightings   Sighting[]
 }
 
 model Post {
-  id              String    @id @default(cuid()) // Primary key
-  name            String
-  pet_type        PetType
-  pet_gender      PetGender
-  pet_description String
-  pet_size        PetSize
-  pet_age         PetAge
-  date_lost       DateTime
-  reward          String?
-  picture         String
-  pet_state       PetState
-  tags            String[]
-  latitude        Decimal   @db.Decimal(9, 6)
-  longitude       Decimal   @db.Decimal(9, 6)
-
-  user    User   @relation(fields: [user_id], references: [id])
-  user_id String
-
-  @@unique([name, id])
-  @@unique([date_lost, user_id])
+  id                    BigInt        @id @default(autoincrement())
+  user                  User          @relation(fields: [user_id], references: [id])
+  user_id               String
+  pet                   Pet           @relation(fields: [pet_id], references: [id])
+  pet_id                BigInt
+  titulo                String
+  descripcion           String        @default("")
+  etiquetas             String?
+  ubicacion             String?
+  estado                PetState
+  visibilidad           Visibility    @default(PUBLICO)
+  comentarios_habilitados Boolean     @default(true)
+  created_at            DateTime      @default(now())
+  updated_at            DateTime      @updatedAt
+  comments              Comment[]
+  favorites             Favorite[]
 }
+
+model Comment {
+  id          BigInt     @id @default(autoincrement())
+  post        Post       @relation(fields: [post_id], references: [id])
+  post_id     BigInt
+  user        User       @relation(fields: [user_id], references: [id])
+  user_id     String
+  contenido   String
+  created_at  DateTime   @default(now())
+}
+
+model AdoptionRequest {
+  id          BigInt          @id @default(autoincrement())
+  pet         Pet             @relation(fields: [pet_id], references: [id])
+  pet_id      BigInt
+  adopter     User            @relation(fields: [adopter_id], references: [id])
+  adopter_id  String
+  estado      AdoptionStatus  @default(PENDIENTE)
+  created_at  DateTime        @default(now())
+  updated_at  DateTime        @updatedAt
+}
+
+model Report {
+  id            BigInt       @id @default(autoincrement())
+  tipo_elemento String
+  elemento_id   BigInt
+  reported_by   User         @relation(fields: [reported_by_id], references: [id])
+  reported_by_id String
+  razon         String
+  estado        ReportStatus @default(PENDIENTE)
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+}
+
+model Notification {
+  id         BigInt     @id @default(autoincrement())
+  user       User       @relation(fields: [user_id], references: [id])
+  user_id    String
+  mensaje    String
+  leido      Boolean    @default(false)
+  created_at DateTime   @default(now())
+}
+
+model Message {
+  id          BigInt     @id @default(autoincrement())
+  sender      User       @relation("MessagesSent", fields: [sender_id], references: [id])
+  sender_id   String
+  receiver    User       @relation("MessagesReceived", fields: [receiver_id], references: [id])
+  receiver_id String
+  contenido   String
+  sent_at     DateTime   @default(now())
+}
+
+model UserFollows {
+  follower   User     @relation("followers", fields: [follower_id], references: [id])
+  follower_id String
+  followed   User     @relation("following", fields: [followed_id], references: [id])
+  followed_id String
+  created_at DateTime @default(now())
+  @@id([follower_id, followed_id])
+}
+
+model Favorite {
+  user       User      @relation(fields: [user_id], references: [id])
+  user_id    String
+  post       Post      @relation(fields: [post_id], references: [id])
+  post_id    BigInt
+  created_at DateTime  @default(now())
+  @@id([user_id, post_id])
+}
+
+model Sighting {
+  id          BigInt     @id @default(autoincrement())
+  pet         Pet        @relation(fields: [pet_id], references: [id])
+  pet_id      BigInt
+  user        User       @relation(fields: [user_id], references: [id])
+  user_id     String
+  latitud     Float
+  longitud    Float
+  descripcion String
+  created_at  DateTime   @default(now())
+}
+
+model Setting {
+  id                    BigInt         @id @default(autoincrement())
+  user                  User           @relation(fields: [user_id], references: [id])
+  user_id               String         @unique
+  privacidad_cuenta     Visibility     @default(PUBLICO)
+  cuenta_bloqueada      Boolean        @default(false)
+  bloqueados            String?
+  idioma                PreferredLanguage @default(ES)
+  apariencia_modo_nocturno Boolean     @default(false)
+  created_at            DateTime       @default(now())
+  updated_at            DateTime       @updatedAt
+}
+
 
 enum UserRole {
   USER
@@ -95,4 +220,21 @@ enum PetState {
   FOUND
   ADOPTION
   ADOPTED
+}
+
+enum Visibility {
+  PUBLICO
+  PRIVADO
+}
+
+enum AdoptionStatus {
+  PENDIENTE
+  APROBADO
+  RECHAZADO
+}
+
+enum ReportStatus {
+  PENDIENTE
+  RESUELTO
+  DESESTIMADO
 }
