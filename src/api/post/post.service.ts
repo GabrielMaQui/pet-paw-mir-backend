@@ -54,6 +54,7 @@ export class PostService {
 
     return newPost;
   }
+
   public async getOnePostById(id: number): Promise<Post | null> {
     return await this.prisma.post.findUnique({
       where: { id },
