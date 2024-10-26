@@ -6,7 +6,7 @@ import {
 
 const router = Router();
 
-router.get('/:id', getSettingByIdHandler);
+router.get('/:user_id', getSettingByIdHandler);
 router.put('/:id', updateSettingByIdHandler);
 
 export default router;

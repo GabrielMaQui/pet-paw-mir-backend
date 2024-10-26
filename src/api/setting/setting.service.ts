@@ -3,9 +3,13 @@ import type { Setting } from './setting.type';
 
 const prisma = new PrismaClient();
 
-export async function getSettingById(id: bigint): Promise<Setting | null> {
-  return prisma.setting.findUnique({
-    where: { id },
+export async function getSettingById(user_id: string): Promise<Setting | null> {
+  if (!user_id) {
+    throw new Error('user_id is required');
+  }
+
+  return await prisma.setting.findUnique({
+    where: { user_id },
   });
 }
 

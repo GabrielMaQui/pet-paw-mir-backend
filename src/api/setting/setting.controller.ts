@@ -1,34 +1,30 @@
 import type { Setting } from '@prisma/client';
 import type { Request, Response } from 'express';
-import * as settingService from './setting.service';
+import { getSettingById, updateSettingById } from './setting.service';
 
 export async function getSettingByIdHandler(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const { id } = req.params;
+  const { user_id } = req.params;
 
   try {
-    const settingId = BigInt(id);
-
-    if (Number.isNaN(settingId)) {
-      res.status(400).json({ message: 'Invalid setting ID' });
-      return;
-    }
-
-    const setting = await settingService.getSettingById(settingId);
-
-    if (!setting) {
+    const setting = await getSettingById(user_id);
+    if (setting) {
+      // Convertimos los BigInt a string antes de enviarlos en el JSON
+      const settingFormatted = {
+        ...setting,
+        id: setting.id.toString(),
+        created_at: setting.created_at.toISOString(),
+        updated_at: setting.updated_at.toISOString(),
+      };
+      res.json({ data: settingFormatted });
+    } else {
       res.status(404).json({ message: 'Setting not found' });
-      return;
     }
-
-    res.json({ data: setting });
   } catch (error) {
-    console.error('Error fetching setting:', error);
-    res
-      .status(500)
-      .json({ message: 'An error occurred while fetching the setting' });
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred' });
   }
 }
 
@@ -47,17 +43,22 @@ export async function updateSettingByIdHandler(
       return;
     }
 
-    const updatedSetting = await settingService.updateSettingById(
-      settingId,
-      settingData,
-    );
+    const updatedSetting = await updateSettingById(settingId, settingData);
 
     if (!updatedSetting) {
       res.status(404).json({ message: 'Setting not found' });
       return;
     }
 
-    res.json({ data: updatedSetting });
+    // Convertimos los BigInt a string antes de enviarlos en el JSON
+    const formattedSetting = {
+      ...updatedSetting,
+      id: updatedSetting.id.toString(),
+      created_at: updatedSetting.created_at.toISOString(),
+      updated_at: updatedSetting.updated_at.toISOString(),
+    };
+
+    res.json({ data: formattedSetting });
   } catch (error) {
     console.error('Error updating setting:', error);
     res
