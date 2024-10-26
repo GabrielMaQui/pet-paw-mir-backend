@@ -1,12 +1,11 @@
 import { Router } from 'express';
 import { hasRole, isAuthenticated } from '../../auth/auth.controller';
 import {
-  createPostHandler,
+  createPostWithPetHandler,
   deletePostHandler,
   getAllPostsHandler,
   getOnePostHandler,
   getPostsByUserHandler,
-  getUserPostsHandler,
   updatePostHandler,
 } from './post.controller';
 
@@ -41,7 +40,7 @@ router.get('/', getAllPostsHandler);
  *       500:
  *         description: Error del servidor.
  */
-router.get('/myposts', hasRole(['USER']), getUserPostsHandler);
+router.get('/myposts', hasRole(['USER']), getPostsByUserHandler);
 
 /**
  * @swagger
@@ -146,7 +145,7 @@ router.delete('/:id', deletePostHandler);
  *       400:
  *         description: Error en la creación del post.
  */
-router.post('/', hasRole(['USER']), createPostHandler);
+router.post('/', hasRole(['USER']), createPostWithPetHandler);
 
 /**
  * @swagger

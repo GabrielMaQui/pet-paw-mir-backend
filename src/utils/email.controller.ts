@@ -10,26 +10,38 @@ export async function sendVerificationEmail(
   name: string,
   token: string,
 ) {
-  const mailerSend = new MailerSend({
-    apiKey: process.env.API_KEY_EMAIL || '',
-  });
+  try {
+    console.log('Starting to send verification email...');
+    console.log('Recipient email:', email);
+    console.log('Recipient name:', name);
+    console.log('Verification token:', token);
 
-  const sentFrom = new Sender(
-    'MS_EZBgjx@trial-jpzkmgq2y9ng059v.mlsender.net',
-    'PET PAWS',
-  );
+    const mailerSend = new MailerSend({
+      apiKey: process.env.API_KEY_EMAIL || '',
+    });
 
-  const recipients = [new Recipient(email, 'Nuevo Usuario')];
+    const sentFrom = new Sender(
+      'MS_EZBgjx@trial-jpzkmgq2y9ng059v.mlsender.net',
+      'PET PAWS',
+    );
 
-  const emailParams = new EmailParams()
-    .setFrom(sentFrom)
-    .setTo(recipients)
-    .setSubject('Email Verification')
-    .setHtml(getHTMLTemplate(name, token));
+    const recipients = [new Recipient(email, 'Nuevo Usuario')];
 
-  await mailerSend.email.send(emailParams);
+    const emailParams = new EmailParams()
+      .setFrom(sentFrom)
+      .setTo(recipients)
+      .setSubject('Email Verification')
+      .setHtml(getHTMLTemplate(name, token));
+
+    console.log('EmailParams prepared:', emailParams);
+
+    await mailerSend.email.send(emailParams);
+
+    console.log('Verification email sent successfully!');
+  } catch (error) {
+    console.error('Error sending verification email:', error);
+  }
 }
-
 export async function sendPasswordResetEmail(
   email: string,
   name: string,
@@ -50,7 +62,7 @@ export async function sendPasswordResetEmail(
     .setFrom(sentFrom)
     .setTo(recipients)
     .setSubject('Restablecimiento de Contraseña')
-    .setHtml(getHTMLTemplateForPasswordReset(name, token)); // Cambia a una función de plantilla adecuada
+    .setHtml(getHTMLTemplateForPasswordReset(name, token));
 
   await mailerSend.email.send(emailParams);
 }
