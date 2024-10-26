@@ -1,4 +1,3 @@
-import exp from 'node:constants';
 import { PrismaClient } from '@prisma/client';
 import type { Pet } from '../pet/pet.type';
 import type { Post } from './post.type';

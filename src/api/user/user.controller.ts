@@ -1,6 +1,7 @@
 import { add } from 'date-fns';
 import type { Request, Response } from 'express';
 import { sendVerificationEmail } from '../../utils/email.controller';
+import { createDefaultSettings } from '../setting/setting.service';
 
 import {
   createUser,
@@ -24,7 +25,7 @@ export async function createUserHandler(req: Request, res: Response) {
     // Generar el token aleatorio y la fecha de expiración
     const verificationToken = generateRandomToken();
     const currentDate = new Date();
-    const tokenExpiresAt = add(currentDate, { days: 1 }); // Establece la expiración para 1 día después
+    const tokenExpiresAt = add(currentDate, { days: 1 });
 
     const userWithTokenData = {
       ...userData,
@@ -36,7 +37,8 @@ export async function createUserHandler(req: Request, res: Response) {
     const newUser = await createUser(userWithTokenData);
 
     await sendVerificationEmail(newUser.email, newUser.name, verificationToken);
-
+    // Crear configuraciones por defecto para el nuevo usuario
+    await createDefaultSettings(newUser.id);
     // Responder con el nuevo usuario creado
     res.status(201).json(newUser);
   } catch (error) {
