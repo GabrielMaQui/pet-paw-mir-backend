@@ -1,6 +1,10 @@
 import { add } from 'date-fns';
 import type { Request, Response } from 'express';
-import { sendVerificationEmail } from '../../utils/email.controller';
+import { generateRandomToken } from '../../auth/utils/crypto';
+import {
+  sendVerificationEmail,
+  sendVerificationEmailNodeMailer,
+} from '../../utils/email.controller';
 import { createDefaultSettings } from '../setting/setting.service';
 
 import {
@@ -36,8 +40,13 @@ export async function createUserHandler(req: Request, res: Response) {
     // Crear el usuario con los datos actualizados
     const newUser = await createUser(userWithTokenData);
 
-    await sendVerificationEmail(newUser.email, newUser.name, verificationToken);
-    // Crear configuraciones por defecto para el nuevo usuario
+    //await sendVerificationEmail(newUser.email, newUser.name, verificationToken);
+    await sendVerificationEmailNodeMailer(
+      newUser.email,
+      newUser.name,
+      verificationToken,
+    );
+
     await createDefaultSettings(newUser.id);
     // Responder con el nuevo usuario creado
     res.status(201).json(newUser);
@@ -79,8 +88,4 @@ export async function deleteUserHandler(req: Request, res: Response) {
   } catch (error) {
     res.status(500).json({ error: 'Error al eliminar el usuario' });
   }
-}
-
-function generateRandomToken(): string {
-  return Math.floor(1000000 + Math.random() * 9000000).toString(); // Genera un número de 7 dígitos
 }

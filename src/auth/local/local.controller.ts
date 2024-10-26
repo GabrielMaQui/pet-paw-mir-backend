@@ -6,7 +6,11 @@ import {
   getUserByToken,
   updateUser,
 } from '../../api/user/user.service';
-import { sendPasswordResetEmail } from '../../utils/email.controller';
+import {
+  sendPasswordResetEmail,
+  sendPasswordResetEmailNodeMailer,
+} from '../../utils/email.controller';
+import { generateRandomToken, hashPassword } from '../utils/crypto';
 import { comparePassword } from '../utils/crypto';
 import { createAuthResponse } from './local.service';
 
@@ -86,14 +90,18 @@ export async function recoverPasswordHandler(
       });
       return;
     }
-    const verificationToken = '12345678';
+    const verificationToken = '';
     const tokenExpiresAt = add(new Date(), { days: 1 });
     await updateUser(user.id, {
       verificationToken,
       tokenExpiresAt,
     });
 
-    await sendPasswordResetEmail(user.email, user.name, verificationToken);
+    await sendPasswordResetEmailNodeMailer(
+      user.email,
+      user.name,
+      verificationToken,
+    );
 
     res.json({
       message:
@@ -130,15 +138,16 @@ export async function resetPasswordHandler(
       return;
     }
 
+    const newPasswordHash = hashPassword(newPassword);
     await updateUser(user.id, {
-      password: newPassword,
+      password: await newPasswordHash,
       verificationToken: null,
       tokenExpiresAt: null,
     });
 
     res.json({ message: 'Password has been successfully reset.' });
   } catch (error) {
-    console.error(error);
+    console.error('Error resetting password:', error);
     res.status(500).json({ message: 'Internal Server Error' });
   }
 }
