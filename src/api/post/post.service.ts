@@ -24,6 +24,10 @@ export class PostService {
       userId: string;
     },
   ): Promise<Post> {
+    if (!postData || !postData.petData) {
+      throw new Error('postData or petData is undefined');
+    }
+
     const newPost = await this.prisma.$transaction(async (prisma) => {
       const newPet = await prisma.pet.create({
         data: {
@@ -32,7 +36,7 @@ export class PostService {
         },
       });
 
-      const newPost = await prisma.post.create({
+      return await prisma.post.create({
         data: {
           user: { connect: { id: postData.userId } },
           pet: { connect: { id: newPet.id } },
@@ -44,17 +48,12 @@ export class PostService {
           visibilidad: postData.visibilidad,
           comentarios_habilitados: postData.comentarios_habilitados,
         },
-        include: {
-          pet: true, // Incluye los datos de la mascota en el nuevo post creado
-        },
+        include: { pet: true },
       });
-
-      return newPost;
     });
 
     return newPost;
   }
-
   public async getOnePostById(id: number): Promise<Post | null> {
     return await this.prisma.post.findUnique({
       where: { id },

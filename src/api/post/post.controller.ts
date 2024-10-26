@@ -1,5 +1,6 @@
 import type { Pet } from '@prisma/client';
 import { NextFunction, type Request, type Response } from 'express';
+import JSONbig from 'json-bigint';
 import { PostService } from './post.service';
 import type { Post } from './post.type';
 
@@ -17,16 +18,21 @@ export async function createPostWithPetHandler(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const { postData } = req.body as {
-    postData: Omit<Post, 'id' | 'created_at' | 'updated_at' | 'pet_id'> & {
-      petData: Omit<Pet, 'id' | 'created_at' | 'updated_at' | 'owner_id'>;
-      userId: string;
-    };
+  const postData = req.body as Omit<
+    Post,
+    'id' | 'created_at' | 'updated_at' | 'pet_id'
+  > & {
+    petData: Omit<Pet, 'id' | 'created_at' | 'updated_at' | 'owner_id'>;
+    userId: string;
   };
 
   try {
     const newPost = await postService.createPostWithPet(postData);
-    res.status(201).json({ data: newPost });
+    const responseData = JSONbig.stringify({ data: newPost });
+    res
+      .status(201)
+      .setHeader('Content-Type', 'application/json')
+      .send(responseData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'An error occurred' });

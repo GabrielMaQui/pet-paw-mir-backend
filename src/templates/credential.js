@@ -68,7 +68,7 @@ export const getHTMLTemplate = (name, token) => {
     <body>
         <div class="container">
             <div class="header">
-                <img src="./img/logo.png" alt="Pet Paw Logo" />
+
                 <h1>Completa tu Registro en Pet Paw</h1>
             </div>
             <div class="content">

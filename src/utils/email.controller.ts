@@ -21,7 +21,7 @@ export async function sendVerificationEmail(
     });
 
     const sentFrom = new Sender(
-      'MS_EZBgjx@trial-jpzkmgq2y9ng059v.mlsender.net',
+      'MS_r6LY0h@trial-jpzkmgq2y9ng059v.mlsender.net',
       'PET PAWS',
     );
 
@@ -52,7 +52,7 @@ export async function sendPasswordResetEmail(
   });
 
   const sentFrom = new Sender(
-    'MS_EZBgjx@trial-jpzkmgq2y9ng059v.mlsender.net',
+    'MS_FVVzdK@trial-jpzkmgq2y9ng059v.mlsender.net',
     'PET PAWS',
   );
 
