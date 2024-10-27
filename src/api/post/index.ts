@@ -41,6 +41,7 @@ router.get('/', getAllPostsHandler);
  *       500:
  *         description: Error del servidor.
  */
+
 router.get('/myposts', hasRole(['USER']), getPostsByTokenHandler);
 
 /**

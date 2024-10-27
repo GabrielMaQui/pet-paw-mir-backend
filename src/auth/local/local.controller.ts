@@ -91,6 +91,7 @@ export async function recoverPasswordHandler(
       return;
     }
     const verificationToken = generateRandomToken();
+
     const tokenExpiresAt = add(new Date(), { days: 1 });
     await updateUser(user.id, {
       verificationToken,
@@ -107,6 +108,7 @@ export async function recoverPasswordHandler(
       message:
         'An email has been sent with instructions to reset your password.',
       token: verificationToken,
+
     });
   } catch (error) {
     console.error(error);

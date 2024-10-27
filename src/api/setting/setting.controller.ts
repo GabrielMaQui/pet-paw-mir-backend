@@ -64,3 +64,4 @@ export async function updateSettingByIdHandler(
       .json({ message: 'An error occurred while updating the setting' });
   }
 }
+

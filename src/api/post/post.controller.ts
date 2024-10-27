@@ -28,7 +28,6 @@ export async function createPostWithPetHandler(
   res: Response,
 ): Promise<void> {
   const postData = req.body as CreatePostWithPetInput;
-
   try {
     const newPost = await postService.createPostWithPet(postData);
     const responseData = JSONbig.stringify({ data: newPost });
@@ -152,6 +151,7 @@ export async function getPostsByUserHandler(
       .json({ message: 'An error occurred while fetching the posts' });
   }
 }
+
 
 export async function getPostsByTokenHandler(
   req: AuthRequest,

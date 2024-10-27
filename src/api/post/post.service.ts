@@ -1,7 +1,9 @@
 import { PrismaClient } from '@prisma/client';
+
 import { decodeToken } from '../../auth/auth.service';
 import type { Pet } from '../pet/pet.type';
 import type { CreatePostWithPetInput, Post } from './post.type';
+
 
 export class PostService {
   private prisma: PrismaClient;

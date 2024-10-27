@@ -74,6 +74,7 @@ export async function getOneUserByGmailHandler(req: Request, res: Response) {
   const user = await getUserByGmail(email);
   if (!user) {
     res.status(404).json({ error: 'Usuario no encontrado' });
+
   } else {
     res.json(user);
   }

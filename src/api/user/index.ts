@@ -134,7 +134,6 @@ router.patch('/:id', hasRole(['ADMINISTRADOR']), updateUserHandler);
  *         description: No autorizado.
  */
 router.delete('/:id', hasRole(['ADMINISTRADOR']), deleteUserHandler);
-
 router.get('/email/:email', getOneUserByGmailHandler);
 
 //exportar la aplicacion
