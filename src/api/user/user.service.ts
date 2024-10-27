@@ -47,6 +47,16 @@ export async function getUserById(id: string): Promise<User | null> {
   return user;
 }
 
+export async function getUserByGmail(email: string): Promise<User | null> {
+  const user = await prisma.user.findUnique({
+    where: {
+      email,
+    },
+  });
+
+  return user;
+}
+
 export async function updateUser(
   id: string,
   input: Partial<User>,
