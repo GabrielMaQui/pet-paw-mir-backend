@@ -70,7 +70,7 @@ router.post('/login', loginHandler);
  */
 router.get('/activate/:token', activateAccountHandler);
 router.post('/recover-password', recoverPasswordHandler);
-router.get('/reset-password/:token', resetPasswordHandler);
+router.post('/reset-password/', resetPasswordHandler);
 
 //router.patch('/forgot-password', (req, res) => {});
 

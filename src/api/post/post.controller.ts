@@ -1,8 +1,9 @@
 import type { Pet } from '@prisma/client';
 import { NextFunction, type Request, type Response } from 'express';
 import JSONbig from 'json-bigint';
+import type { AuthRequest } from '../../auth/auth.types';
 import { PostService } from './post.service';
-import type { Post } from './post.type';
+import type { CreatePostWithPetInput, Post } from './post.type';
 
 const postService = new PostService();
 
@@ -26,14 +27,7 @@ export async function createPostWithPetHandler(
   req: Request,
   res: Response,
 ): Promise<void> {
-  const postData = req.body as Omit<
-    Post,
-    'id' | 'created_at' | 'updated_at' | 'pet_id'
-  > & {
-    petData: Omit<Pet, 'id' | 'created_at' | 'updated_at' | 'owner_id'>;
-    userId: string;
-  };
-
+  const postData = req.body as CreatePostWithPetInput;
   try {
     const newPost = await postService.createPostWithPet(postData);
     const responseData = JSONbig.stringify({ data: newPost });
@@ -64,7 +58,6 @@ export async function getOnePostHandler(
     const post = await postService.getOnePostById(postId);
 
     if (post) {
-      // Convertir BigInt a string antes de enviar la respuesta
       const sanitizedPost = convertBigIntAndDateToString(post);
       res.json({ data: sanitizedPost });
     } else {
@@ -156,6 +149,26 @@ export async function getPostsByUserHandler(
     res
       .status(500)
       .json({ message: 'An error occurred while fetching the posts' });
+  }
+}
+
+
+export async function getPostsByTokenHandler(
+  req: AuthRequest,
+  res: Response,
+): Promise<void> {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      res.status(401).json({ message: 'No user ID found in request' });
+      return;
+    }
+
+    const posts = await postService.getPostsByUser(userId);
+    res.json(posts);
+  } catch (error) {
+    console.error('Error al obtener posts del usuario:', error);
+    res.status(500).json({ message: 'Internal server error' });
   }
 }
 

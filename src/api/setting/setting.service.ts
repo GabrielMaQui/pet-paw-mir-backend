@@ -3,18 +3,18 @@ import type { Setting } from './setting.type';
 
 const prisma = new PrismaClient();
 
-export async function getSettingById(user_id: string): Promise<Setting | null> {
-  if (!user_id) {
+export async function getSettingById(userId: string): Promise<Setting | null> {
+  if (!userId) {
     throw new Error('user_id is required');
   }
 
   return await prisma.setting.findUnique({
-    where: { user_id },
+    where: { userId },
   });
 }
 
 export async function updateSettingById(
-  id: bigint,
+  id: number,
   settingData: Partial<Setting>,
 ): Promise<Setting | null> {
   return prisma.setting.update({
@@ -26,11 +26,11 @@ export async function updateSettingById(
 export async function createDefaultSettings(userId: string): Promise<Setting> {
   return prisma.setting.create({
     data: {
-      user_id: userId,
-      privacidad_cuenta: 'PUBLICO', // Valor por defecto
-      cuenta_bloqueada: false, // Valor por defecto
-      idioma: 'ES', // Valor por defecto
-      apariencia_modo_nocturno: false, // Valor por defecto
+      userId: userId,
+      accountPrivacy: 'PUBLIC', // Valor por defecto
+      accountBlocked: false, // Valor por defecto
+      language: 'ES', // Valor por defecto
+      darkMode: false, // Valor por defecto
     },
   });
 }

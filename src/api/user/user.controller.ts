@@ -11,6 +11,7 @@ import {
   createUser,
   deleteUser,
   getAllUsers,
+  getUserByGmail,
   getUserById,
   updateUser,
 } from './user.service';
@@ -62,6 +63,18 @@ export async function getOneUserHandler(req: Request, res: Response) {
 
   if (!user) {
     res.status(404).json({ error: 'Usuario no encontrado' });
+  } else {
+    res.json(user);
+  }
+}
+
+export async function getOneUserByGmailHandler(req: Request, res: Response) {
+  const { email } = req.params;
+  console.log(email);
+  const user = await getUserByGmail(email);
+  if (!user) {
+    res.status(404).json({ error: 'Usuario no encontrado' });
+
   } else {
     res.json(user);
   }

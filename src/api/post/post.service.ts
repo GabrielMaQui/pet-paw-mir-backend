@@ -1,6 +1,9 @@
 import { PrismaClient } from '@prisma/client';
+
+import { decodeToken } from '../../auth/auth.service';
 import type { Pet } from '../pet/pet.type';
-import type { Post } from './post.type';
+import type { CreatePostWithPetInput, Post } from './post.type';
+
 
 export class PostService {
   private prisma: PrismaClient;
@@ -18,10 +21,7 @@ export class PostService {
   }
 
   public async createPostWithPet(
-    postData: Omit<Post, 'id' | 'created_at' | 'updated_at' | 'pet_id'> & {
-      petData: Omit<Pet, 'id' | 'created_at' | 'updated_at' | 'owner_id'>;
-      userId: string;
-    },
+    postData: CreatePostWithPetInput,
   ): Promise<Post> {
     if (!postData || !postData.petData) {
       throw new Error('postData or petData is undefined');
@@ -39,13 +39,13 @@ export class PostService {
         data: {
           user: { connect: { id: postData.userId } },
           pet: { connect: { id: newPet.id } },
-          titulo: postData.titulo,
-          descripcion: postData.descripcion,
-          etiquetas: postData.etiquetas,
-          ubicacion: postData.ubicacion,
-          estado: postData.estado,
-          visibilidad: postData.visibilidad,
-          comentarios_habilitados: postData.comentarios_habilitados,
+          title: postData.title,
+          description: postData.description,
+          tags: postData.tags,
+          location: postData.location,
+          state: postData.state,
+          visibility: postData.visibility,
+          commentsEnabled: postData.commentsEnabled,
         },
         include: { pet: true },
       });
@@ -82,7 +82,7 @@ export class PostService {
   public async getPostsByUser(userId: string): Promise<Post[]> {
     return await this.prisma.post.findMany({
       where: {
-        user_id: userId,
+        userId: userId,
       },
       include: { pet: true },
     });

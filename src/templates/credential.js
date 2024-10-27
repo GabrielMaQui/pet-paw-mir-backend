@@ -160,8 +160,10 @@ export const getHTMLTemplateForPasswordReset = (name, token) => {
               </div>
               <div class="content">
                   <p>¡Hola ${name}!</p>
-                  <p>Hemos recibido una solicitud para restablecer tu contraseña. Para proceder, haz clic en el siguiente enlace:</p>
-                  <a href="http://your-app-url/reset-password/${token}" class="token">Restablecer Contraseña</a>
+
+                  <p>Hemos recibido una solicitud para restablecer tu contraseña. Para proceder, Ingresa el siguiente código en la página:</p>
+                  <span class="token">Token: ${token}</span>
+
                   <p>Si no solicitaste un restablecimiento de contraseña, puedes ignorar este correo.</p>
               </div>
               <div class="footer">
