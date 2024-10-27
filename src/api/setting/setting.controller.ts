@@ -11,12 +11,10 @@ export async function getSettingByIdHandler(
   try {
     const setting = await getSettingById(user_id);
     if (setting) {
-      // Convertimos los BigInt a string antes de enviarlos en el JSON
       const settingFormatted = {
         ...setting,
-        id: setting.id.toString(),
-        created_at: setting.created_at.toISOString(),
-        updated_at: setting.updated_at.toISOString(),
+        created_at: setting.createdAt.toISOString(),
+        updated_at: setting.updatedAt.toISOString(),
       };
       res.json({ data: settingFormatted });
     } else {
@@ -36,7 +34,8 @@ export async function updateSettingByIdHandler(
   const settingData = req.body as Partial<Setting>;
 
   try {
-    const settingId = BigInt(id);
+    // No es necesario convertir id a BigInt
+    const settingId = Number(id);
 
     if (Number.isNaN(settingId)) {
       res.status(400).json({ message: 'Invalid setting ID' });
@@ -50,12 +49,11 @@ export async function updateSettingByIdHandler(
       return;
     }
 
-    // Convertimos los BigInt a string antes de enviarlos en el JSON
+    // No es necesario convertir BigInt a string
     const formattedSetting = {
       ...updatedSetting,
-      id: updatedSetting.id.toString(),
-      created_at: updatedSetting.created_at.toISOString(),
-      updated_at: updatedSetting.updated_at.toISOString(),
+      created_at: updatedSetting.createdAt.toISOString(),
+      updated_at: updatedSetting.updatedAt.toISOString(),
     };
 
     res.json({ data: formattedSetting });

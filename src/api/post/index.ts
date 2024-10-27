@@ -5,6 +5,7 @@ import {
   deletePostHandler,
   getAllPostsHandler,
   getOnePostHandler,
+  getPostsByTokenHandler,
   getPostsByUserHandler,
   updatePostHandler,
 } from './post.controller';
@@ -40,7 +41,7 @@ router.get('/', getAllPostsHandler);
  *       500:
  *         description: Error del servidor.
  */
-router.get('/myposts', hasRole(['USER']), getPostsByUserHandler);
+router.get('/myposts', hasRole(['USER']), getPostsByTokenHandler);
 
 /**
  * @swagger
