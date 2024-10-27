@@ -8,7 +8,7 @@ datasource db {
 }
 
 model User {
-  id                String    @id @default(cuid())
+  id                String            @id @default(cuid())
   name              String
   lastName          String
   country           String?
@@ -17,8 +17,8 @@ model User {
   address           String?
   phoneNumber       String?
   birthDate         DateTime
-  account           String    @unique
-  email             String    @unique
+  account           String            @unique
+  email             String            @unique
   password          String
   role              UserRole          @default(USER)
   isActive          Boolean           @default(false)
@@ -180,41 +180,6 @@ model Setting {
   updatedAt      DateTime          @updatedAt
 }
 
-model Favorite {
-  user       User      @relation(fields: [user_id], references: [id])
-  user_id    String
-  post       Post      @relation(fields: [post_id], references: [id])
-  post_id    BigInt
-  created_at DateTime  @default(now())
-  @@id([user_id, post_id])
-}
-
-model Sighting {
-  id          BigInt     @id @default(autoincrement())
-  pet         Pet        @relation(fields: [pet_id], references: [id])
-  pet_id      BigInt
-  user        User       @relation(fields: [user_id], references: [id])
-  user_id     String
-  latitud     Float
-  longitud    Float
-  descripcion String
-  created_at  DateTime   @default(now())
-}
-
-model Setting {
-  id                    BigInt         @id @default(autoincrement())
-  user                  User           @relation(fields: [user_id], references: [id])
-  user_id               String         @unique
-  privacidad_cuenta     Visibility     @default(PUBLICO)
-  cuenta_bloqueada      Boolean        @default(false)
-  bloqueados            String?
-  idioma                PreferredLanguage @default(ES)
-  apariencia_modo_nocturno Boolean     @default(false)
-  created_at            DateTime       @default(now())
-  updated_at            DateTime       @updatedAt
-}
-
-
 enum UserRole {
   USER
   ADMINISTRATOR
@@ -259,7 +224,6 @@ enum PetState {
 }
 
 enum Visibility {
-
   PUBLIC
   PRIVATE
 }
