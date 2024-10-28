@@ -14,7 +14,7 @@ export function createAuthResponse(input: User) {
     avatar: input.avatar,
     role: input.role,
     email: input.email,
-
+    id: input.id,
   };
 
   return {
