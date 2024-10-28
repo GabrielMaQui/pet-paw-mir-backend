@@ -12,6 +12,7 @@ model User {
   name              String
   lastName          String
   country           String?
+  description       String?
   avatar            String?
   gender            String            @default("No especificado")
   address           String?
