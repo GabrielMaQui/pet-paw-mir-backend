@@ -24,7 +24,7 @@ export const getHTMLTemplate = (name, token) => {
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             }
             .header {
-                background-color: #27ae60;
+                background-color: #FFB0A9;
                 color: white;
                 padding: 20px;
                 text-align: center;
@@ -68,8 +68,9 @@ export const getHTMLTemplate = (name, token) => {
     <body>
         <div class="container">
             <div class="header">
-
+                <img src="https://i.ibb.co/phDpLCY/file-1-removebg-preview.png" alt="file-1-removebg-preview" border="0">
                 <h1>Completa tu Registro en Pet Paw</h1>
+
             </div>
             <div class="content">
                 <p>¡Hola ${name}!</p>
@@ -155,7 +156,7 @@ export const getHTMLTemplateForPasswordReset = (name, token) => {
       <body>
           <div class="container">
               <div class="header">
-                  <img src="./img/logo.png" alt="Pet Paw Logo" alt="Pet Paw Logo" />
+                 <img src="https://i.ibb.co/phDpLCY/file-1-removebg-preview.png" alt="file-1-removebg-preview" border="0">
                   <h1>Restablece tu Contraseña en Pet Paw</h1>
               </div>
               <div class="content">
