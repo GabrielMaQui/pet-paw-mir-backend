@@ -107,7 +107,7 @@ router.post('/', createUserHandler);
  *       403:
  *         description: No autorizado.
  */
-router.patch('/:id', hasRole(['ADMINISTRADOR']), updateUserHandler);
+router.patch('/:id', hasRole(['USER']), updateUserHandler);
 
 //Eliminar usuario
 /**
