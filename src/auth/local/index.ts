@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import {
   activateAccountHandler,
+  getCurrentUserHandler,
   loginHandler,
   recoverPasswordHandler,
   resetPasswordHandler,
@@ -71,6 +72,7 @@ router.post('/login', loginHandler);
 router.get('/activate/:token', activateAccountHandler);
 router.post('/recover-password', recoverPasswordHandler);
 router.post('/reset-password/', resetPasswordHandler);
+router.post('/me', getCurrentUserHandler);
 
 //router.patch('/forgot-password', (req, res) => {});
 

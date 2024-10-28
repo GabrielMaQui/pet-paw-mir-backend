@@ -11,7 +11,7 @@ export class PostService {
   public async getAllPosts(): Promise<Post[]> {
     return await this.prisma.post.findMany({
       include: {
-        pet: true,
+        Pet: true,
       },
     });
   }
@@ -65,7 +65,7 @@ export class PostService {
   public async getOnePostById(id: number): Promise<Post | null> {
     return await this.prisma.post.findUnique({
       where: { id },
-      include: { pet: true },
+      include: { Pet: true },
     });
   }
 
@@ -76,14 +76,14 @@ export class PostService {
     return await this.prisma.post.update({
       where: { id },
       data: postData,
-      include: { pet: true },
+      include: { Pet: true },
     });
   }
 
   public async deletePostById(id: number): Promise<Post | null> {
     return await this.prisma.post.delete({
       where: { id },
-      include: { pet: true },
+      include: { Pet: true },
     });
   }
 
@@ -92,7 +92,7 @@ export class PostService {
       where: {
         userId: userId,
       },
-      include: { pet: true },
+      include: { Pet: true },
     });
   }
 }
