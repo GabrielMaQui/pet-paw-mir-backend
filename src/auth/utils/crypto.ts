@@ -33,5 +33,5 @@ export function comparePassword(
 }
 
 export function generateRandomToken(): string {
-  return Math.floor(1000000 + Math.random() * 9000000).toString(); // Genera un número de 7 dígitos
+  return Math.floor(1000000 + Math.random() * 9000000).toString();
 }

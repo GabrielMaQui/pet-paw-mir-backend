@@ -1,5 +1,6 @@
 import type { Setting } from '@prisma/client';
 import type { Request, Response } from 'express';
+import { updateSettingPassword } from '../user/user.service';
 import { getSettingById, updateSettingById } from './setting.service';
 
 export async function getSettingByIdHandler(
@@ -65,3 +66,26 @@ export async function updateSettingByIdHandler(
   }
 }
 
+export async function updateSettingChangePasswordHandler(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  const { email, password, newPassword } = req.body;
+  try {
+    const updatedSettingPassword = await updateSettingPassword(
+      email,
+      password,
+      newPassword,
+    );
+    if (!updatedSettingPassword) {
+      res.status(404).json({ message: 'Usuario no existente' });
+      return;
+    }
+    res.json({ message: 'Cambio de contraseña logrado' });
+  } catch (error) {
+    console.error('Error updating setting:', error);
+    res
+      .status(500)
+      .json({ message: 'An error occurred while updating the setting' });
+  }
+}
