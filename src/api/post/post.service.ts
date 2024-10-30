@@ -1,7 +1,5 @@
 import { PrismaClient } from '@prisma/client';
 
-import { decodeToken } from '../../auth/auth.service';
-import type { Pet } from '../Pet/Pet.type';
 import type { CreatePostWithPetInput, Post } from './post.type';
 
 export class PostService {
@@ -14,7 +12,7 @@ export class PostService {
   public async getAllPosts(): Promise<Post[]> {
     return await this.prisma.post.findMany({
       include: {
-        Pet: true,
+        pet: true,
       },
     });
   }
@@ -22,14 +20,14 @@ export class PostService {
   public async createPostWithPet(
     postData: CreatePostWithPetInput,
   ): Promise<Post> {
-    if (!postData || !postData.PetData) {
-      throw new Error('postData or PetData is undefined');
+    if (!postData || !postData.petData) {
+      throw new Error('postData or petData is undefined');
     }
 
-    const newPost = await this.prisma.$transaction(async (prisma) => {
-      const newPet = await prisma.Pet.create({
+    return await this.prisma.$transaction(async (prisma) => {
+      const newPet = await prisma.pet.create({
         data: {
-          ...postData.PetData,
+          ...postData.petData,
           owner: { connect: { id: postData.userId } },
         },
       });
@@ -37,7 +35,7 @@ export class PostService {
       return await prisma.post.create({
         data: {
           user: { connect: { id: postData.userId } },
-          Pet: { connect: { id: newPet.id } },
+          pet: { connect: { id: newPet.id } },
           title: postData.title,
           description: postData.description,
           tags: postData.tags,
@@ -46,17 +44,15 @@ export class PostService {
           visibility: postData.visibility,
           commentsEnabled: postData.commentsEnabled,
         },
-        include: { Pet: true },
+        include: { pet: true },
       });
     });
-
-    return newPost;
   }
 
   public async getOnePostById(id: number): Promise<Post | null> {
     return await this.prisma.post.findUnique({
       where: { id },
-      include: { Pet: true },
+      include: { pet: true },
     });
   }
 
@@ -67,23 +63,23 @@ export class PostService {
     return await this.prisma.post.update({
       where: { id },
       data: postData,
-      include: { Pet: true },
+      include: { pet: true },
     });
   }
 
   public async deletePostById(id: number): Promise<Post | null> {
     return await this.prisma.post.delete({
       where: { id },
-      include: { Pet: true },
+      include: { pet: true },
     });
   }
 
   public async getPostsByUser(userId: string): Promise<Post[]> {
-    return await this.prisma.post.findMany({
+    return this.prisma.post.findMany({
       where: {
         userId: userId,
       },
-      include: { Pet: true },
+      include: { pet: true },
     });
   }
 }
