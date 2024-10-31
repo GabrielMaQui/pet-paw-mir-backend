@@ -78,7 +78,7 @@ export async function updateSettingChangePasswordHandler(
       newPassword,
     );
     if (!updatedSettingPassword) {
-      res.status(404).json({ message: 'Usuario no existente' });
+      res.status(404).json({ message: 'Contraseña incorrecta' });
       return;
     }
     res.json({ message: 'Cambio de contraseña logrado' });
