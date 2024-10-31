@@ -24,8 +24,11 @@ export async function loginHandler(req: Request, res: Response) {
       res.status(400).json({
         message: 'User not found',
       });
+    } else if (!user.isActive) {
+      res.status(400).json({
+        message: 'User not activated',
+      });
     } else {
-      // Compare password
       const isMatch = await comparePassword(password, user.password);
 
       if (!isMatch) {
