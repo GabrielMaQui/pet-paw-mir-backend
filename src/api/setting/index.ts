@@ -16,4 +16,5 @@ router.patch(
   updateSettingChangePasswordHandler,
 );
 
+
 export default router;
