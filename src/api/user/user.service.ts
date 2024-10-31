@@ -9,9 +9,14 @@ export async function getAllUsers(): Promise<User[]> {
   return users;
 }
 
-export async function createUser(input: User): Promise<User> {
+export async function createUser(input: User): Promise<User | null> {
   if (!input.password) {
     throw new Error('Password is required');
+  }
+  const user = await getUserByEmail(input.email);
+
+  if (user != null) {
+    return null;
   }
 
   const hashedPassword = await hashPassword(input.password);

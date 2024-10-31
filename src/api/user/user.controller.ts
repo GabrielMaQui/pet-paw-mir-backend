@@ -37,19 +37,19 @@ export async function createUserHandler(req: Request, res: Response) {
       verificationToken,
       tokenExpiresAt,
     };
-
     // Crear el usuario con los datos actualizados
     const newUser = await createUser(userWithTokenData);
 
+    if (newUser == null) {
+      return res.status(400).json({ error: 'The email already exists' });
+    }
     //await sendVerificationEmail(newUser.email, newUser.name, verificationToken);
     await sendVerificationEmailNodeMailer(
       newUser.email,
       newUser.name,
       verificationToken,
     );
-
     await createDefaultSettings(newUser.id);
-    // Responder con el nuevo usuario creado
     res.status(201).json(newUser);
   } catch (error) {
     console.error(error);
@@ -74,7 +74,6 @@ export async function getOneUserByGmailHandler(req: Request, res: Response) {
   const user = await getUserByGmail(email);
   if (!user) {
     res.status(404).json({ error: 'Usuario no encontrado' });
-
   } else {
     res.json(user);
   }
