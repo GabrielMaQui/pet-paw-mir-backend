@@ -27,10 +27,10 @@ export async function createDefaultSettings(userId: string): Promise<Setting> {
   return prisma.setting.create({
     data: {
       userId: userId,
-      accountPrivacy: 'PUBLIC', // Valor por defecto
-      accountBlocked: false, // Valor por defecto
-      language: 'ES', // Valor por defecto
-      darkMode: false, // Valor por defecto
+      accountPrivacy: 'PUBLIC',
+      accountBlocked: false,
+      language: 'ES',
+      darkMode: false,
     },
   });
 }
