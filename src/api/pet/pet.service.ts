@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
-import type { Pet } from './pet.type';
+import type { Post } from '../post/post.type';
+import type { Pet, PetData } from './pet.type';
 
 const prisma = new PrismaClient();
 
@@ -8,9 +9,15 @@ export async function getAllPets(): Promise<Pet[]> {
   return pets;
 }
 
-export async function createPet(input: Pet): Promise<Pet> {
+export async function createPet(
+  petData: PetData,
+  userId: string,
+): Promise<Pet> {
   const newPet = await prisma.pet.create({
-    data: input,
+    data: {
+      ...petData,
+      owner: { connect: { id: userId } },
+    },
   });
 
   return newPet;

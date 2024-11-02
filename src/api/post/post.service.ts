@@ -1,9 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-
-import { decodeToken } from '../../auth/auth.service';
-import type { Pet } from '../pet/pet.type';
 import type { CreatePostWithPetInput, Post } from './post.type';
-
 
 export class PostService {
   private prisma: PrismaClient;
@@ -24,34 +20,46 @@ export class PostService {
     postData: CreatePostWithPetInput,
   ): Promise<Post> {
     if (!postData || !postData.petData) {
-      throw new Error('postData or petData is undefined');
+      throw new Error('Invalid input: postData or petData is missing');
     }
+    try {
+      const newPost = await this.prisma.$transaction(async (prisma) => {
+        const newPet = await prisma.pet.create({
+          data: {
+            ...postData.petData,
+            owner: { connect: { id: postData.userId } },
+          },
+        });
 
-    const newPost = await this.prisma.$transaction(async (prisma) => {
-      const newPet = await prisma.pet.create({
-        data: {
-          ...postData.petData,
-          owner: { connect: { id: postData.userId } },
-        },
+        const newSighting = await prisma.sighting.create({
+          data: {
+            pet: { connect: { id: newPet.id } },
+            user: { connect: { id: postData.userId } },
+            latitude: postData.sightingData.latitude,
+            longitude: postData.sightingData.longitude,
+          },
+        });
+
+        return await prisma.post.create({
+          data: {
+            user: { connect: { id: postData.userId } },
+            pet: { connect: { id: newPet.id } },
+            title: postData.title,
+            description: postData.description,
+            tags: postData.tags,
+            location: postData.location,
+            state: postData.state,
+            visibility: postData.visibility,
+            commentsEnabled: postData.commentsEnabled,
+          },
+          include: { pet: true },
+        });
       });
-
-      return await prisma.post.create({
-        data: {
-          user: { connect: { id: postData.userId } },
-          pet: { connect: { id: newPet.id } },
-          title: postData.title,
-          description: postData.description,
-          tags: postData.tags,
-          location: postData.location,
-          state: postData.state,
-          visibility: postData.visibility,
-          commentsEnabled: postData.commentsEnabled,
-        },
-        include: { pet: true },
-      });
-    });
-
-    return newPost;
+      return newPost;
+    } catch (error) {
+      console.error('Error creating post with pet:', error);
+      throw new Error('Failed to create post with pet');
+    }
   }
 
   public async getOnePostById(id: number): Promise<Post | null> {

@@ -62,7 +62,7 @@ model Pet {
   updatedAt        DateTime          @updatedAt
   posts            Post[]
   adoptionRequests AdoptionRequest[]
-  sightings        Sighting[]
+  sightings        Sighting?
 }
 
 model Post {
@@ -157,15 +157,14 @@ model Favorite {
 }
 
 model Sighting {
-  id          Int      @id @default(autoincrement())
-  pet         Pet      @relation(fields: [petId], references: [id])
-  petId       Int
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String
-  latitude    Float
-  longitude   Float
-  description String
-  createdAt   DateTime @default(now())
+  id        Int      @id @default(autoincrement())
+  pet       Pet      @relation(fields: [petId], references: [id])
+  petId     Int      @unique
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  latitude  Float
+  longitude Float
+  createdAt DateTime @default(now())
 }
 
 model Setting {

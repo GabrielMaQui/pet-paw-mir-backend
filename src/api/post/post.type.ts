@@ -1,10 +1,6 @@
-import type {
-  PetAge,
-  PetGender,
-  PetSize,
-  Post as PostPrisma,
-} from '@prisma/client';
+import type { Post as PostPrisma } from '@prisma/client';
 import type { PetState, PetType, Visibility } from '@prisma/client';
+import type { PetData } from '../pet/pet.type';
 
 export type Post = PostPrisma;
 
@@ -17,18 +13,9 @@ export type CreatePostWithPetInput = {
   visibility: Visibility;
   commentsEnabled: boolean;
   userId: string;
-  petData: {
-    name: string;
-    petType: PetType;
-    breed: string | null;
-    fur: string | null;
-    eyeColor: string | null;
-    gender: PetGender;
-    age: PetAge;
-    size: PetSize;
-    state: PetState;
-    description: string | null;
-    imageUrl: string | null;
-    validated: boolean;
+  petData: PetData;
+  sightingData: {
+    latitude: number;
+    longitude: number;
   };
 };
