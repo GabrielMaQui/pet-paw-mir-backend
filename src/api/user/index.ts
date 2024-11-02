@@ -137,5 +137,7 @@ router.delete('/:id', hasRole(['ADMINISTRADOR']), deleteUserHandler);
 
 router.get('/email/:email', getOneUserByGmailHandler);
 
+router.get('/:id', getOneUserHandler);
+
 //exportar la aplicacion
 export default router;
