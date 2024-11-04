@@ -1,5 +1,5 @@
 import type { Post as PostPrisma } from '@prisma/client';
-import type { PetState, PetType, Visibility } from '@prisma/client';
+import type { PetState, Visibility } from '@prisma/client';
 import type { PetData } from '../pet/pet.type';
 
 export type Post = PostPrisma;

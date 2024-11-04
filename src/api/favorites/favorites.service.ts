@@ -11,7 +11,7 @@ export class FavoritesService {
     return this.favoriteRepository.getAllFavorites(userId);
   }
 
-  public async createFavorite(userId: string, postId: string) {
+  public async createFavorite(userId: string, postId: number) {
     return this.favoriteRepository.createFavorite(userId, postId);
   }
 
