@@ -153,3 +153,22 @@ export async function resetPasswordHandler(
     res.status(500).json({ message: 'Internal Server Error' });
   }
 }
+
+export async function getCurrentUserHandler(req: Request, res: Response) {
+  const { token } = req.params;
+
+  const user = await getUserByToken(token);
+
+  if (!user) {
+    res.status(400).json({ message: 'Invalid token' });
+  } else {
+    const currentDate = new Date();
+    const tokenExpired = user.tokenExpiresAt as Date;
+
+    if (isAfter(currentDate, tokenExpired)) {
+      res.status(400).json({ message: 'Token has expired' });
+    } else {
+      res.json(user);
+    }
+  }
+}

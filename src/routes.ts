@@ -1,4 +1,6 @@
 import type { Application } from 'express';
+import commentRouter from './api/comment';
+import favoritesRouter from './api/favorites';
 import postRouter from './api/post';
 import settingRouter from './api/setting';
 import userRouter from './api/user';
@@ -9,6 +11,8 @@ function routes(app: Application): void {
   app.use('/auth/local', authLocalRouter);
   app.use('/api/posts', postRouter);
   app.use('/api/setting', settingRouter);
+  app.use('/api/favorites', favoritesRouter);
+  app.use('/comments', commentRouter);
 }
 
 export default routes;

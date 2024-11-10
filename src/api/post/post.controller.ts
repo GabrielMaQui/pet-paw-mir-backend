@@ -48,12 +48,14 @@ export async function getOnePostHandler(
   const { id } = req.params;
 
   try {
-    const postId = Number.parseInt(id, 10);
+    const postId = Number.parseInt(id);
 
     if (Number.isNaN(postId)) {
       res.status(400).json({ message: 'Invalid post ID' });
       return;
     }
+
+    console.log(postId);
 
     const post = await postService.getOnePostById(postId);
 
@@ -151,7 +153,6 @@ export async function getPostsByUserHandler(
       .json({ message: 'An error occurred while fetching the posts' });
   }
 }
-
 
 export async function getPostsByTokenHandler(
   req: AuthRequest,
