@@ -1,6 +1,8 @@
 import type { Application } from 'express';
+import chatRouter from './api/chat';
 import commentRouter from './api/comment';
 import favoritesRouter from './api/favorites';
+import messageRouter from './api/message';
 import postRouter from './api/post';
 import settingRouter from './api/setting';
 import userRouter from './api/user';
@@ -13,6 +15,8 @@ function routes(app: Application): void {
   app.use('/api/setting', settingRouter);
   app.use('/api/favorites', favoritesRouter);
   app.use('/comments', commentRouter);
+  app.use('/chat', chatRouter);
+  app.use('/menssage', messageRouter);
 }
 
 export default routes;
