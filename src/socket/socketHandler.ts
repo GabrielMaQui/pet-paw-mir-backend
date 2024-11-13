@@ -85,7 +85,6 @@ const socketHandler = (io: Server) => {
     socket.on('disconnect', async () => {
       console.log('User disconnected:', socket.id);
 
-      // Limpiamos el socketId del usuario en la base de datos cuando se desconecta
       await prisma.user.updateMany({
         where: { socketId: socket.id },
         data: { socketId: null },
@@ -105,13 +104,11 @@ const socketHandler = (io: Server) => {
 
     // Enviar mensajes privados
     socket.on('sendMessagesPrivate', async ({ message, recipientUserId }) => {
-      // Buscar al destinatario por su User.id
       const recipientUser = await prisma.user.findUnique({
         where: { id: recipientUserId },
       });
 
       if (recipientUser?.socketId) {
-        // Enviar mensaje al destinatario si está conectado
         io.to(recipientUser.socketId).emit('sendMessage', {
           message,
           user: socket.id,
