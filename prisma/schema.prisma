@@ -133,6 +133,8 @@ model Message {
   sender     User     @relation("MessagesSent", fields: [senderId], references: [id])
   senderId   String
   receiver   User     @relation("MessagesReceived", fields: [receiverId], references: [id])
+  chat       Chat     @relation("ChatMessages", fields: [chatId], references: [id]) // Referencia al chat al que pertenece el mensaje
+  chatId     Int // ID del chat al que pertenece el mensaje
   receiverId String
   content    String
   sentAt     DateTime @default(now())
@@ -183,10 +185,11 @@ model Setting {
 }
 
 model Chat {
-  id        Int      @id @default(autoincrement())
-  members   User[]   @relation("ChatMembers") // Array de usuarios como miembros del chat
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        Int       @id @default(autoincrement())
+  members   User[]    @relation("ChatMembers") // Array de usuarios como miembros del chat
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[] @relation("ChatMessages")
 }
 
 enum UserRole {

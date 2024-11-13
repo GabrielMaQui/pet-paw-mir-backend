@@ -8,12 +8,10 @@ export const createMessage = async (
   const { chat_id, sender_id, receiver_id, content } = req.body;
 
   if (!chat_id || !sender_id || !receiver_id || !content) {
-    res
-      .status(400)
-      .json({
-        message:
-          'Datos incompletos: se requieren chat_id, sender_id, receiver_id y content',
-      });
+    res.status(400).json({
+      message:
+        'Datos incompletos: se requieren chat_id, sender_id, receiver_id y content',
+    });
     return;
   }
 
@@ -38,18 +36,16 @@ export const getMessages = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const { id: chat_id } = req.params;
+  const { id } = req.params;
 
   try {
-    const messages = await messageService.getMessagesByChatId(Number(chat_id));
+    const messages = await messageService.getMessagesByChatId(Number(id));
     if (messages.length > 0) {
       res.status(200).json(messages);
     } else {
-      res
-        .status(404)
-        .json({
-          message: 'No se encontraron mensajes para el chat especificado',
-        });
+      res.status(404).json({
+        message: 'No se encontraron mensajes para el chat especificado',
+      });
     }
   } catch (error) {
     if (error instanceof Error) {

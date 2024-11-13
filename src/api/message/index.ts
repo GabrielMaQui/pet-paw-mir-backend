@@ -4,7 +4,7 @@ import { createMessage, getMessages } from './message.controller';
 
 const router = express.Router();
 
-router.post('/messages', hasRole(['USER']), createMessage);
-router.get('/messages/:id', hasRole(['USER']), getMessages);
+router.post('/', hasRole(['USER']), createMessage);
+router.get('/:id', hasRole(['USER']), getMessages);
 
 export default router;
