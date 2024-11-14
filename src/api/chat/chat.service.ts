@@ -43,7 +43,17 @@ export const getChatsByUserId = async (userId: string) => {
           some: { id: userId },
         },
       },
-      include: { members: true },
+      include: {
+        members: {
+          select: {
+            id: true,
+            name: true,
+            lastName: true,
+            email: true,
+            avatar: true,
+          },
+        },
+      },
     });
     return chats;
   } catch (error) {

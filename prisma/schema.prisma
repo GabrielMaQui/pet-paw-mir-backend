@@ -134,7 +134,7 @@ model Message {
   senderId   String
   receiver   User     @relation("MessagesReceived", fields: [receiverId], references: [id])
   chat       Chat     @relation("ChatMessages", fields: [chatId], references: [id])
-  chatId     Int 
+  chatId     Int
   receiverId String
   content    String
   sentAt     DateTime @default(now())
@@ -186,7 +186,7 @@ model Setting {
 
 model Chat {
   id        Int       @id @default(autoincrement())
-  members   User[]    @relation("ChatMembers") // Array de usuarios como miembros del chat
+  members   User[]    @relation("ChatMembers")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   messages  Message[] @relation("ChatMessages")
