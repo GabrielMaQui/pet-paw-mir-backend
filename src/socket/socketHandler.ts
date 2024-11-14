@@ -2,9 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import type { Server } from 'socket.io';
 
 const prisma = new PrismaClient();
-
-const prisma = new PrismaClient();
-
 const socketHandler = (io: Server) => {
   io.on('connection', (socket) => {
     console.log(`User connected: ${socket.id}`);
@@ -84,7 +81,6 @@ const socketHandler = (io: Server) => {
     // Desconexión y actualización de socketId
     socket.on('disconnect', async () => {
       console.log('User disconnected:', socket.id);
-
       await prisma.user.updateMany({
         where: { socketId: socket.id },
         data: { socketId: null },
