@@ -11,6 +11,7 @@ export const createMessage = async (
 ): Promise<Message> => {
   return prisma.message.create({
     data: {
+      chatId,
       senderId,
       receiverId,
       content,
@@ -18,9 +19,11 @@ export const createMessage = async (
   });
 };
 
-export const getMessagesByChatId = async (id: number): Promise<Message[]> => {
+export const getMessagesByChatId = async (
+  chatId: number,
+): Promise<Message[]> => {
   return prisma.message.findMany({
-    where: { id },
+    where: { chatId },
     orderBy: { sentAt: 'asc' },
   });
 };
