@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import type { Server } from 'socket.io';
+import { handleNewComment } from '../api/comment/comment.controller';
 
 const prisma = new PrismaClient();
 
@@ -51,6 +52,14 @@ const socketHandler = (io: Server) => {
       } catch (error) {
         console.error('Error al manejar desconexión:', error);
       }
+    });
+
+    socket.on('newComment', async (commentData) => {
+      await handleNewComment(socket, commentData);
+    });
+
+    socket.on('disconnect', () => {
+      console.log('User disconnected:', socket.id);
     });
 
     // Manejo de mensajes privados
