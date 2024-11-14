@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import type { Server } from 'socket.io';
+import { handleNewComment } from '../api/comment/comment.controller';
 
 const prisma = new PrismaClient();
 
