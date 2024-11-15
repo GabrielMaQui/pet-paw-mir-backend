@@ -144,8 +144,7 @@ export async function getPostsByUserHandler(
 
   try {
     const posts = await postService.getPostsByUser(userId);
-    const sanitizedPosts = convertBigIntAndDateToString(posts);
-    res.json({ data: sanitizedPosts });
+    res.json(posts);
   } catch (error) {
     console.error('Error fetching posts by user:', error);
     res
