@@ -12,6 +12,7 @@ model User {
   name              String
   lastName          String
   country           String?
+  socketId          String?
   description       String?
   avatar            String?
   gender            String            @default("No especificado")
@@ -40,6 +41,7 @@ model User {
   favorites         Favorite[]
   sightings         Sighting[]
   settings          Setting?
+  chats             Chat[]            @relation("ChatMembers")
 }
 
 model Pet {
@@ -131,6 +133,8 @@ model Message {
   sender     User     @relation("MessagesSent", fields: [senderId], references: [id])
   senderId   String
   receiver   User     @relation("MessagesReceived", fields: [receiverId], references: [id])
+  chat       Chat     @relation("ChatMessages", fields: [chatId], references: [id])
+  chatId     Int
   receiverId String
   content    String
   sentAt     DateTime @default(now())
@@ -178,6 +182,14 @@ model Setting {
   darkMode       Boolean           @default(false)
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @updatedAt
+}
+
+model Chat {
+  id        Int       @id @default(autoincrement())
+  members   User[]    @relation("ChatMembers")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  messages  Message[] @relation("ChatMessages")
 }
 
 enum UserRole {

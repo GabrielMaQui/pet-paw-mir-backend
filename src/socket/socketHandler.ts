@@ -1,9 +1,58 @@
+import { PrismaClient } from '@prisma/client';
 import type { Server } from 'socket.io';
 import { handleNewComment } from '../api/comment/comment.controller';
 
+const prisma = new PrismaClient();
+
 const socketHandler = (io: Server) => {
   io.on('connection', (socket) => {
-    console.log('User connected:', socket.id);
+    console.log(`User connected: ${socket.id}`);
+
+    // Registro del usuario usando su User.id
+    socket.on('register', async (userId) => {
+      try {
+        const user = await prisma.user.findUnique({
+          where: { id: userId },
+        });
+
+        if (!user) {
+          socket.emit('userNotFound', 'El usuario no existe.');
+          return;
+        }
+
+        // Actualizar el socketId del usuario
+        await prisma.user.update({
+          where: { id: userId },
+          data: { socketId: socket.id },
+        });
+
+        socket.emit('login');
+        const activeUsers = await prisma.user.findMany({
+          where: { socketId: { not: null } },
+          select: { id: true, name: true, avatar: true },
+        });
+        io.emit('activeSessions', activeUsers);
+      } catch (error) {
+        console.error('Error en registro de usuario:', error);
+      }
+    });
+
+    // Manejo de desconexión
+    socket.on('disconnect', async () => {
+      try {
+        await prisma.user.updateMany({
+          where: { socketId: socket.id },
+          data: { socketId: null },
+        });
+        const activeUsers = await prisma.user.findMany({
+          where: { socketId: { not: null } },
+          select: { id: true, name: true, avatar: true },
+        });
+        io.emit('activeSessions', activeUsers);
+      } catch (error) {
+        console.error('Error al manejar desconexión:', error);
+      }
+    });
 
     socket.on('newComment', async (commentData) => {
       await handleNewComment(socket, commentData);
@@ -11,6 +60,25 @@ const socketHandler = (io: Server) => {
 
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);
+    });
+
+    // Manejo de mensajes privados
+    socket.on('sendMessagesPrivate', async ({ message, recipientUserId }) => {
+      try {
+        const recipientUser = await prisma.user.findUnique({
+          where: { id: recipientUserId },
+        });
+
+        // Verificamos si el usuario tiene un socketId asignado
+        if (recipientUser?.socketId) {
+          io.to(recipientUser.socketId).emit('receiveMessage', message);
+        }
+
+        // Emitir el mensaje también al remitente para actualizar su lista
+        socket.emit('receiveMessage', message);
+      } catch (error) {
+        console.error('Error en mensaje privado:', error);
+      }
     });
   });
 };
