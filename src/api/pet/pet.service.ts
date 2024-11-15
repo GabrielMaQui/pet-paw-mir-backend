@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import type { Post } from '../post/post.type';
 import type { Pet, PetData } from './pet.type';
 
 const prisma = new PrismaClient();
