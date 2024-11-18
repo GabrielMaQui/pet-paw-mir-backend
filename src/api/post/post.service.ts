@@ -11,7 +11,11 @@ export class PostService {
   public async getAllPosts(): Promise<Post[]> {
     return await this.prisma.post.findMany({
       include: {
-        pet: true,
+        pet: {
+          include: {
+            sightings: true,
+          },
+        },
       },
     });
   }
@@ -52,7 +56,13 @@ export class PostService {
             visibility: postData.visibility,
             commentsEnabled: postData.commentsEnabled,
           },
-          include: { pet: true },
+          include: {
+            pet: {
+              include: {
+                sightings: true,
+              },
+            },
+          },
         });
       });
       return newPost;
@@ -65,7 +75,13 @@ export class PostService {
   public async getOnePostById(id: number): Promise<Post | null> {
     return await this.prisma.post.findUnique({
       where: { id },
-      include: { pet: true },
+      include: {
+        pet: {
+          include: {
+            sightings: true, // Incluye los avistamientos creados
+          },
+        },
+      },
     });
   }
 
@@ -76,14 +92,26 @@ export class PostService {
     return await this.prisma.post.update({
       where: { id },
       data: postData,
-      include: { pet: true },
+      include: {
+        pet: {
+          include: {
+            sightings: true, // Incluye los avistamientos creados
+          },
+        },
+      },
     });
   }
 
   public async deletePostById(id: number): Promise<Post | null> {
     return await this.prisma.post.delete({
       where: { id },
-      include: { pet: true },
+      include: {
+        pet: {
+          include: {
+            sightings: true, // Incluye los avistamientos creados
+          },
+        },
+      },
     });
   }
 
@@ -92,7 +120,13 @@ export class PostService {
       where: {
         userId: userId,
       },
-      include: { pet: true },
+      include: {
+        pet: {
+          include: {
+            sightings: true, // Incluye los avistamientos creados
+          },
+        },
+      },
     });
   }
 }
