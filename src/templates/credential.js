@@ -112,7 +112,7 @@ export const getHTMLTemplateForPasswordReset = (name, token) => {
                   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
               }
               .header {
-                  background-color: #27ae60;
+                  background-color: #FFB0A9;
                   color: white;
                   padding: 20px;
                   text-align: center;

@@ -13,7 +13,7 @@ export class PostService {
       include: {
         pet: {
           include: {
-            sightings: true, // Incluye los avistamientos creados
+            sightings: true,
           },
         },
       },
