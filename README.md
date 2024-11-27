@@ -22,8 +22,11 @@
 <br>
 
 **Repositorio FrontEnd:**
-<br>
-[PetPaws BackEnd](https://github.com/davichano/pet-paw-mir)
+
+<a href="https://github.com/davichano/pet-paw-mir" style="margin-right: 15">
+  <img src="src/img/readme//images/icon-svg/github2.svg" alt="GitHub Icon" width="60" />
+</a>
+
 
 <br>
 
