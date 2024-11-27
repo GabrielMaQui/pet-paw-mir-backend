@@ -23,7 +23,11 @@
 
 **Repositorio FrontEnd:**
 <br>
-[PetPaws BackEnd](https://github.com/davichano/pet-paw-mir)
+[PetPaws FronEnd](https://github.com/davichano/pet-paw-mir)
+
+**Usuario de Administrador:**
+**Mail**: petpawsa@gmail.com
+**Password**: admin1234
 
 <br>
 
