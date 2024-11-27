@@ -25,9 +25,16 @@
 <br>
 [PetPaws FronEnd](https://github.com/davichano/pet-paw-mir)
 
+<br>
+
 **Usuario de Administrador:**
+<br>
+
 **Mail**: petpawsa@gmail.com
+<br>
+
 **Password**: admin1234
+
 
 <br>
 
