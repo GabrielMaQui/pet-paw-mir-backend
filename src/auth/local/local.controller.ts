@@ -20,7 +20,7 @@ export async function loginHandler(req: Request, res: Response) {
   try {
     const user = await getUserByEmail(email);
 
-    if (!user || user.isActive) {
+    if (!user) {
       res.status(400).json({
         message: 'User not found or not active',
       });
