@@ -16,8 +16,6 @@ model User {
   description       String?
   avatar            String?
   gender            String            @default("No especificado")
-  address           String?
-  phoneNumber       String?
   birthDate         DateTime
   account           String            @unique
   email             String            @unique
@@ -48,9 +46,6 @@ model Pet {
   id               Int               @id @default(autoincrement())
   name             String
   petType          PetType
-  breed            String?
-  fur              String?
-  eyeColor         String?
   gender           PetGender
   age              PetAge
   size             PetSize

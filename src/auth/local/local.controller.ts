@@ -20,14 +20,13 @@ export async function loginHandler(req: Request, res: Response) {
   try {
     const user = await getUserByEmail(email);
 
-    if (!user) {
+    if (!user || user.isActive) {
       res.status(400).json({
-        message: 'User not found',
+        message: 'User not found or not active',
       });
     } else {
       // Compare password
       const isMatch = await comparePassword(password, user.password);
-
       if (!isMatch) {
         res.status(400).json({
           message: 'Email or password is incorrect',
