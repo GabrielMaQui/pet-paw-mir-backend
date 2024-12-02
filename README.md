@@ -317,9 +317,9 @@ Puedes encontrar más información respecto al proyecto en:
 
 ## Autores
 
-- GitHub - [Noelia Garcia Pacara](https://github.com/NoeliaGAP)
+- GitHub - [Noelia Allison Garcia Pacara](https://github.com/NoeliaGAP)
 - GitHub - [William Lupaca Ticona](https://github.com/PunoBootcamper)
-- Github - [Augusto Perales Guevara](https://github.com/AEperalesguevara)
+- Github - [Gabriel Steven Machicao Quispe](https://github.com/GabrielMaQui)
 - GitHub - [David Paredes Abanto](https://github.com/davidchano)
 
 
